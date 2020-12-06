@@ -134,7 +134,7 @@ app.get('/test-upload', async (req, res) => {
 // test exec function, not production use
 app.get('/test-run', async(req,res)=>{
     
-    let { stdout, stderr } = await exec('javac Test503308789.java -v');
+    let { stdout, stderr } = await exec('javac Test503308789.java');
     console.log('stdout:', stdout);
     console.error('stderr:', stderr);
 
