@@ -141,7 +141,7 @@ app.get('/test-run', async(req,res)=>{
     let {stdout2, stderr2 } = await exec('ls')
     console.log(stdout2)
 
-    let { stdout1, stderr1 } = await exec('java Test503308789.class');
+    let { stdout1, stderr1 } = await exec('java Test503308789');
     res.send(stdout1)
 
 
