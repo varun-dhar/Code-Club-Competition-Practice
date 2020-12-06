@@ -134,18 +134,29 @@ app.get('/test-upload', async (req, res) => {
 // test exec function, not production use
 app.get('/test-run', async(req,res)=>{
     
-    let { stdout, stderr } = await exec('javac Test503308789.java');
-    console.log('stdout:', stdout);
-    console.error('stderr:', stderr);
+    await exec('javac Test503308789.java');
+    // console.log('stdout:', stdout);
+    // console.error('stderr:', stderr);
 
-    let {stdout2, stderr2 } = await exec('ls')
-    console.log('stdout:', stdout2);
-    console.error('stderr:', stderr2);
+    // let {stdout2, stderr2 } = await exec('ls')
+    // console.log('stdout:', stdout2);
+    // console.error('stderr:', stderr2);
 
-    let cp = await exec('java Test503308789');
-    cp.stdout.on("data", (data)=>{
-        console.log(data)
-    })
+    // let cp = await exec('java Test503308789');
+    // cp.stdout.on("data", (data)=>{
+    //     console.log(data)
+    // })
+
+    let childProcess = require('child_process').spawn(
+        'java', ['Test503308789']
+    );
+    childProcess.stdout.on('data', function(data) {
+        console.log(data);
+    });
+    
+    childProcess.stderr.on("data", function (data) {
+        console.log(data);
+    });
     // console.log('stdout:', stdout1);
     // console.error('stderr:', stderr1);
     res.send("Hello")
