@@ -134,13 +134,18 @@ app.get('/test-upload', async (req, res) => {
 // test exec function, not production use
 app.get('/test-run', async (req, res) => {
 
+    console.log("== Compiling ==")
+
     try {
         let {stdout, stderr} = await exec('javac Test503308789.java');
-        console.log('stdout:', stdout);
-        console.error('stderr:', stderr);
+        console.log("Successful")
+        // console.log('stdout:', stdout);
+        // console.error('stderr:', stderr);
     } catch(e){
-        console.log(e)
-        return res.send(e)
+        let err_msg = JSON.parse(e)
+        err_msg = err_msg.stderr.split('-Dfile.encoding=UTF-8')[1]
+        console.log(err_msg)
+        return res.send(err_msg)
     }
 
 
