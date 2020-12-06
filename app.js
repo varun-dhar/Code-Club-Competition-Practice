@@ -151,11 +151,11 @@ app.get('/test-run', async(req,res)=>{
         'java', ['Test503308789']
     );
     childProcess.stdout.on('data', function(data) {
-        console.log(data);
+        console.log(data.toString());
     });
     
     childProcess.stderr.on("data", function (data) {
-        console.log(data);
+        console.log(data.toString());
     });
     // console.log('stdout:', stdout1);
     // console.error('stderr:', stderr1);
