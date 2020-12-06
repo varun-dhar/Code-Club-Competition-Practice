@@ -140,7 +140,7 @@ app.get('/test-run', async (req, res) => {
         console.error('stderr:', stderr);
     } catch(e){
         console.log(e)
-        return res.send("Error")
+        return res.send(e)
     }
 
 
