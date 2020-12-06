@@ -139,7 +139,8 @@ app.get('/test-run', async(req,res)=>{
     console.error('stderr:', stderr);
 
     let {stdout2, stderr2 } = await exec('ls')
-    console.log(stdout2)
+    console.log('stdout:', stdout2);
+    console.error('stderr:', stderr2);
 
     let { stdout1, stderr1 } = await exec('java Test503308789');
     console.log('stdout:', stdout1);
