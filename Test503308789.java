@@ -16,7 +16,7 @@ public class Test503308789 {
 
         boolean exVar = false;
 
-        int variableToTest503308789;
+        int variableToTest03308789;
 
         if ( tester.isWorking() ){
             exVar = true;

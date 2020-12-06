@@ -132,11 +132,17 @@ app.get('/test-upload', async (req, res) => {
 })
 
 // test exec function, not production use
-app.get('/test-run', async(req,res)=>{
-    
-    await exec('javac Test503308789.java');
-    // console.log('stdout:', stdout);
-    // console.error('stderr:', stderr);
+app.get('/test-run', async (req, res) => {
+
+    try {
+        await exec('javac Test503308789.java');
+        console.log('stdout:', stdout);
+        console.error('stderr:', stderr);
+    } catch(e){
+        console.log(e)
+        return res.send("Error")
+    }
+
 
     // let {stdout2, stderr2 } = await exec('ls')
     // console.log('stdout:', stdout2);
@@ -150,12 +156,17 @@ app.get('/test-run', async(req,res)=>{
     let childProcess = require('child_process').spawn(
         'java', ['Test503308789']
     );
-    childProcess.stdout.on('data', function(data) {
-        console.log(data.toString());
+    childProcess.stdout.on('data', function (data) {
+        if (data.toString().trim() != "" || data.toString().trim() != " ") {
+            console.log(data.toString());
+        }
+
     });
-    
+
     childProcess.stderr.on("data", function (data) {
-        console.log(data.toString());
+        if (data.toString().trim() != "" || data.toString().trim() != " ") {
+            console.log(data.toString());
+        }
     });
     // console.log('stdout:', stdout1);
     // console.error('stderr:', stderr1);
@@ -164,7 +175,7 @@ app.get('/test-run', async(req,res)=>{
 
 })
 
-app.post("/test-upload", upload.single('ok'),  async(req,res)=>{
+app.post("/test-upload", upload.single('ok'), async (req, res) => {
     let resp = await axios.get(req.file.location)
     let original_pre = req.file.originalname.split('.')[0]
     let post_name = req.file.key.split('.')[0]
@@ -173,9 +184,9 @@ app.post("/test-upload", upload.single('ok'),  async(req,res)=>{
     let find = new RegExp(original_pre, 'g')
 
     file_data = file_data.replace(find, post_name)
-    
+
     // takes replaced file data and outputs file to be used when executing
-    fs.writeFile(req.file.key, file_data, (err)=>{
+    fs.writeFile(req.file.key, file_data, (err) => {
         if (err) throw err;
 
         console.log("Written")
@@ -239,7 +250,7 @@ socketServer.on('connection', (socketClient) => {
     //         }
     //     });
     // })
-        
+
 
     socketClient.on('close', (socketClient) => {
         console.log('closed')
