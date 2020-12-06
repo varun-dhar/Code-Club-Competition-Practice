@@ -2,7 +2,7 @@ public class Test(){
 
     int testVar;
 
-    public Test1660211656(){
+    public Test(){
         testVar = "abc"
     }
 
@@ -12,15 +12,15 @@ public class Test(){
 
     public static void main(String[] args){
 
-        Test1660211656 tester = new Test1660211656();
+        Test tester = new Test();
 
         boolean exVar = false;
 
-        int variableToTest1660211656;
+        int variableToTest;
 
         if ( tester.isWorking() ){
             exVar = true;
-            variableToTest1660211656 = 300;
+            variableToTest = 300;
         }
 
         if ( exVar ){
