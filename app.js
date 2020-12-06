@@ -142,7 +142,9 @@ app.get('/test-run', async (req, res) => {
         // console.log('stdout:', stdout);
         // console.error('stderr:', stderr);
     } catch(e){
+        return res.send(e)
         let err_msg = JSON.parse(e)
+        
         err_msg = err_msg.stderr.split('-Dfile.encoding=UTF-8')[1]
         console.log(err_msg)
         return res.send(err_msg)
