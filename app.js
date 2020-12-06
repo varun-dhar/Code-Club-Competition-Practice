@@ -139,8 +139,8 @@ app.get('/test-run', async(req,res)=>{
     console.error('stderr:', stderr);
 
 
-    let { stdout, stderr } = await exec('java Test503308789.class');
-    res.send(stdout)
+    let { stdout1, stderr1 } = await exec('java Test503308789.class');
+    res.send(stdout1)
 
 
 })
