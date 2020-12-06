@@ -1,9 +1,9 @@
-public class Test(){
+public class Test {
 
     int testVar;
 
     public Test(){
-        testVar = "abc"
+        testVar = 123;
     }
 
     public boolean isWorking(){
