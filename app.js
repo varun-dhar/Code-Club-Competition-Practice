@@ -23,8 +23,10 @@ const { databaseUri, port, staticDir } = require('./env')
 const axios = require('axios').default
 const app = express();
 const fs = require('fs')
+const fsPromises = fs.promises;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const readline = require('readline');
 
 // Map global promise - depreciation warning
 mongoose.Promise = global.Promise;
@@ -131,24 +133,95 @@ app.get('/test-upload', async (req, res) => {
     res.sendFile(path.join(__dirname, `./${staticDir}`, 'test.html'));
 })
 
+const getLines = async(text_path) => {
+    const fileStream = fs.createReadStream(`${text_path}`);
+      
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
+
+    return rl;
+}
+
+
 // test exec function, not production use
 app.get('/test-run', async (req, res) => {
 
-    console.log("== Compiling ==")
+    // let user = req.user.id
+    let user = {}
+    user.id = "t12d8s"
+
+    let err_string = ""
+    let out_string = ""
+    let body = ""
+
+    let script_name = "LobbySetup_Sol"
+
+    body += "== Compiling ==\n"
 
     try {
-        let {stdout, stderr} = await exec('javac Test503308789.java');
-        console.log("Successful")
-        // console.log('stdout:', stdout);
-        // console.error('stderr:', stderr);
-    } catch(e){
-        return res.send(e)
-        let err_msg = JSON.parse(e)
-        
-        err_msg = err_msg.stderr.split('-Dfile.encoding=UTF-8')[1]
-        console.log(err_msg)
-        return res.send(err_msg)
+        await exec(`javac -encoding ISO-8859-1 ./${user.id}/${script_name}.java`, {timeout:5000});
+        body += "Successful\n"
+    } catch (e) {
+        let err_msg = e
+        err_msg = e.stderr
+        // err_msg = err_msg.stderr.split('-Dfile.encoding=UTF-8')[1]
+        body += "Failure\n"
+        err_string += err_msg.trim()
+        return res.send({body, out_msg:out_string,err_msg:err_string})
     }
+
+    body += "== Testing Cases =="
+    let childProcess = require('child_process').spawn('java', ['-cp',`./${user.id}` , `${script_name}`]);
+    setTimeout(function(){ childProcess.kill(); err_string += "Timeout Error\n"}, 5000);    
+
+    
+    
+
+    let all_lines = await getLines("./in.txt")
+    
+    for await (const line of all_lines) {
+        // Each line in input.txt will be successively available here as `line`.
+        childProcess.stdin.write(line+"\n")
+    }
+    
+    childProcess.stdout.on("data", function (data) {
+        if (data.toString().trim() != "" && data.toString().trim() != " ") {
+            out_string += data.toString().trim()+"\n";
+        }
+
+    });
+
+
+    childProcess.stderr.on("data", function (data) {
+        if (data.toString().trim() != "" || data.toString().trim() != " ") {
+            // console.log(data.toString());
+            err_string += data.toString().trim()+"\n";
+        }
+    });
+
+    childProcess.on('exit', async()=>{
+        if (process.platform == "win32"){
+            try {
+                let {stdout, stderr} = await exec("fc out.txt expectedOut.txt")
+                if (stdout.includes("no differences")){
+                    return res.send({body, out_msg:out_string,err_msg:err_string, success:true})
+                }
+            } catch(e) {
+                return res.send({body, out_msg:out_string,err_msg:err_string, success:false})
+            }
+        } else {
+            try {
+                let {stdout, stderr} = await exec("diff -q out.txt expectedOut.txt")
+                console.log(stdout, stderr)
+            } catch(e){
+                console.log(e)
+            }
+            
+            
+        }
+    })
 
 
     // let {stdout2, stderr2 } = await exec('ls')
@@ -160,29 +233,31 @@ app.get('/test-run', async (req, res) => {
     //     console.log(data)
     // })
 
-    let childProcess = require('child_process').spawn(
-        'java', ['Test503308789']
-    );
-    childProcess.stdout.on('data', function (data) {
-        if (data.toString().trim() != "" || data.toString().trim() != " ") {
-            console.log(data.toString());
-        }
+    // let childProcess = require('child_process').spawn(
+    //     'java', ['Test503308789']
+    // );
+    // childProcess.stdout.on('data', function (data) {
+    //     if (data.toString().trim() != "" || data.toString().trim() != " ") {
+    //         console.log(data.toString());
+    //     }
 
-    });
+    // });
 
-    childProcess.stderr.on("data", function (data) {
-        if (data.toString().trim() != "" || data.toString().trim() != " ") {
-            console.log(data.toString());
-        }
-    });
-    // console.log('stdout:', stdout1);
+    // childProcess.stderr.on("data", function (data) {
+    //     if (data.toString().trim() != "" || data.toString().trim() != " ") {
+    //         console.log(data.toString());
+    //     }
+    // });
+    // // console.log('stdout:', stdout1);
     // console.error('stderr:', stderr1);
-    res.send("Hello")
-
 
 })
 
 app.post("/test-upload", upload.single('ok'), async (req, res) => {
+
+    let user = {}
+    user.id = "t12d8s"
+
     let resp = await axios.get(req.file.location)
     let original_pre = req.file.originalname.split('.')[0]
     let post_name = req.file.key.split('.')[0]
@@ -192,8 +267,14 @@ app.post("/test-upload", upload.single('ok'), async (req, res) => {
 
     file_data = file_data.replace(find, post_name)
 
+    
+    try {
+        await fsPromises.access(user.id)
+    } catch(e){
+        await fsPromises.mkdir(user.id)
+    }
     // takes replaced file data and outputs file to be used when executing
-    fs.writeFile(req.file.key, file_data, (err) => {
+    fs.writeFile(`./${user.id}/${req.file.originalname}`, file_data, (err) => {
         if (err) throw err;
 
         console.log("Written")
