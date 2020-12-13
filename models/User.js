@@ -39,6 +39,7 @@ const UserSchema = new Schema({
         //     default: false
         // },
         correct: Boolean,
+        submitted_at:Number
     }]
 
 });

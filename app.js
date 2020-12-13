@@ -51,11 +51,6 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 require('./config/passport')(passport);
-// app.use(fileUpload)
-// app.use(fileUpload({
-//     createParentPath: true
-// }));
-// app.set('trust proxy', 1);
 
 
 app.get("/", async (req, res) => {
