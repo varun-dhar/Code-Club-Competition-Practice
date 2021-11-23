@@ -1,10 +1,15 @@
 <!doctype html>
 <html>
 <body>
-    <form action="/test" method='POST' enctype='multipart/form-data'>
-        <input type='text' name='email'></input>
-        <input type='text' name='level'></input>
-        <input type='file' name='file'></input>
+	<a href='/logout'>Logout</a>
+	<br>
+    <form action='/test' method='POST' enctype='multipart/form-data'>
+		<label for='level'>Level:</label>
+        <input type='text' name='level'>
+		<br>
+		<label for='file'>File:</label>
+        <input type='file' name='file'>
+		<br>
         <input type='submit'>
     </form>
 </body>
