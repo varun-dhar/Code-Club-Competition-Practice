@@ -19,7 +19,6 @@ import re
 '''
 TODO
 - steal challenges from leetcode and usaco
-- fix weird repl/mongo error
 - make this look better
 '''
 
