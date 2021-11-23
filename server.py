@@ -170,13 +170,13 @@ async def register(request):
 		pwd_hash = await loop.run_in_executor(pool,hasher.hash,request.form['password'][0])
 		del request.form['password'][0]
 
+	verification = secrets.token_urlsafe(16)
+	await request.app.ctx.smtp.sendmail(request.app.ctx.smtp_sender,email,f'Subject: Verify your HOC Code Competition Account\n\nVerify your email at https://{request.app.ctx.domain}/verify/{verification}\nYou will not be able to log in or submit entries until your email is verified.\n\nDo not reply to this email; this inbox is not monitored.')
 	await request.app.ctx.db['hashes'].insert_one({'email':email,'hash':pwd_hash})
 	del pwd_hash
-	await request.app.ctx.db['user_data'].insert_one({'email':email,'name':request.form['name'][0],'verified':False})
-	verification = secrets.token_urlsafe(16)
 	await request.app.ctx.db['unverified'].insert_one({'email':email,'verification':verification})
-	await request.app.ctx.smtp.sendmail(request.app.ctx.smtp_sender,email,f'Subject: Verify your HOC Code Competition Account\n\nVerify your email at https://{request.app.ctx.domain}/verify/{verification}\nYou will not be able to log in or submit entries until your email is verified.\n\nDo not reply to this email; this inbox is not monitored.')
 	del verification
+	await request.app.ctx.db['user_data'].insert_one({'email':email,'name':request.form['name'][0],'verified':False})
 	return sanic.response.json({'success':True})
 
 @app.get('/verify/<verification:str>')
