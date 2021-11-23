@@ -149,7 +149,7 @@ async def run_test(request):
 async def register_pg(request):
 	if 'session_token' in request.cookies and (await request.app.ctx.db['sessions'].find_one({'token':request.cookies['session_token']})):
 		return sanic.response.redirect('/')
-	res = sanic.response.file('register.html')
+	res = await sanic.response.file('register.html')
 	if 'session_token' in request.cookies:
 		del res.cookies['session_token']
 	return res
