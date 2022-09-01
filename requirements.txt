@@ -1,7 +1,8 @@
 sanic
-python-prctl
 python-dotenv
 motor
-dnspython
 argon2-cffi
 aiosmtplib
+aiohttp
+aiofiles
+dnspython

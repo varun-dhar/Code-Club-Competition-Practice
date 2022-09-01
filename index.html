@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <a href="/logout">Logout</a>
-    <br />
-    <form action="/test" method="POST" enctype="multipart/form-data">
-      <label for="level">Level:</label>
-      <input type="text" name="level" />
-      <br />
-      <label for="file">File:</label>
-      <input type="file" name="file" />
-      <br />
-      <input type="submit" />
-    </form>
-  </body>
+<body>
+<a href="/logout">Logout</a>
+<br/>
+<ul id="levels" style="list-style: none">
+
+</ul>
+<script>
+	window.addEventListener("load",()=>{
+		fetch(window.location.href+"/data").then(async (resp)=>{
+        	const res = await resp.json();
+			const list = document.getElementById('levels');
+            for(const level of res.levels){
+                const item = document.createElement('li');
+                item.innerHTML = `<a href="/levels/${level}">Level ${level}</a>`;
+                list.appendChild(item);
+			}
+		});
+	});
+</script>
+</body>
 </html>

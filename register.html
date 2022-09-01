@@ -1,18 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <p>I make no security guarantees, please don't reuse a password</p>
-  <form action="/register" method="POST" enctype="multipart/form-data">
-    <label for="name">Name:</label>
-    <input type="text" name="name" />
-    <br />
-    <label for="email">Email:</label>
-    <input type="text" name="email" />
-    <br />
-    <label for="password">Password:</label>
-    <input type="password" name="password" />
-    <br />
-    <input type="submit" />
-  </form>
-  <br />
-  <a href="/login">Login</a>
+<body>
+<a href="/">Home</a>
+<p>I make no security guarantees, don't reuse a password</p>
+<form id="regForm" enctype="multipart/form-data">
+	<label for="name">Name:</label>
+	<input type="text" name="name" id="name"/>
+	<br/>
+	<label for="email">Email:</label>
+	<input type="text" name="email" id="email"/>
+	<br/>
+	<label for="password">Password (must be at least 8 characters long, contain a number, and a special
+		character):</label>
+	<input type="password" name="password" id="password"/>
+	<br/>
+	<label for="confirm_password">Confirm password:</label>
+	<input type="password" name="confirm_password" id="confirm_password"/>
+	<br/>
+	<input type="submit"/>
+</form>
+<br/>
+<a href="/login">Login</a>
+<script>
+    window.addEventListener('load', () => {
+        const form = document.getElementById('regForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const data = new FormData(form);
+            fetch('/register', {method: "POST", body: data}).then(async (resp) => {
+                const res = await resp.json();
+                if (res.success) {
+                    alert('Registered. Check your email to verify your account. The verification email may be in your junk folder.')
+                    window.location.replace('/');
+                } else {
+                    alert(res.error);
+                }
+            });
+        });
+    });
+</script>
+</body>
 </html>

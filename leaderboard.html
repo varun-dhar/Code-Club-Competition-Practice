@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Leaderboard</title>
+	<style>
+        #table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+	</style>
+</head>
+<body>
+<a href="/">Home</a>
+<a id="levelLink">Level</a>
+<a href="/logout">Logout</a>
+<br/>
+<h2 id="lb_header"></h2>
+<br/>
+<table id="table">
+	<tr>
+		<th>Rank</th>
+		<th>Name</th>
+		<th>Median Execution Time</th>
+		<th>Mean Execution Time</th>
+	</tr>
+</table>
+<script>
+	window.addEventListener("load",()=>{
+		fetch(window.location.href+"/data").then(async (resp)=>{
+        	const res = await resp.json();
+           	const hdr = document.getElementById("lb_header");
+			hdr.innerText = `Level ${res.level} Leaderboard`
+			const levelLink = document.getElementById('levelLink');
+            levelLink.href = `/levels/${res.level}`;
+            const table = document.getElementById("table");
+            for(const [i,record] of res.data.entries()){
+                const row = table.insertRow();
+                const rank = row.insertCell();
+                rank.innerText = i+1;
+
+                const name = row.insertCell();
+                name.innerText = record.name;
+
+                const median = row.insertCell();
+                median.innerText = `${record.median} ms`;
+
+                const mean = row.insertCell();
+                mean.innerText = `${record.mean} ms`;
+			}
+		});
+	});
+</script>
+</body>
+</html>
