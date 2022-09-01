@@ -25,8 +25,6 @@ dotenv.load_dotenv()
 
 app = sanic.Sanic('runner')
 
-app.ctx.N_TESTS = 1
-
 app.ctx.smtp_sender = os.getenv('SENDER_EMAIL')
 
 app.ctx.domain = os.getenv('DOMAIN')
@@ -146,20 +144,20 @@ async def admin_pg(request):
 @app.post('/add_level')
 async def add_level(request):
 	if 'session_token' not in request.cookies:
-		return sanic.response.json({'success': False, 'error': 'Unauthorized'},status=401)
+		return sanic.response.json({'success': False, 'error': 'Unauthorized'}, status=401)
 
 	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
 	if not record:
-		res = sanic.response.json({'success': False, 'error': 'Unauthorized'},status=401)
+		res = sanic.response.json({'success': False, 'error': 'Unauthorized'}, status=401)
 		del res.cookies['session_token']
 		return res
 	record = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
 	if not record['admin']:
-		return sanic.response.json({'success': False, 'error': 'Forbidden'},status=403)
+		return sanic.response.json({'success': False, 'error': 'Forbidden'}, status=403)
 	try:
 		level = int(request.form['level'][0])
 	except:
-		return sanic.response.json({'success': False, 'error': 'Invalid form'},status=400)
+		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	pathlib.Path(f'levels/{level}').mkdir(exist_ok=True)
 	for file in request.files['tests']:
 		async with aiofiles.open(f'levels/{level}/{file.name}', 'w') as f:
