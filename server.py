@@ -158,9 +158,16 @@ async def add_level(request):
 		level = int(request.form['level'][0])
 	except:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
-	pathlib.Path(f'levels/{level}').mkdir(exist_ok=True)
+	root = pathlib.Path('levels')
+	level_path = root/str(level)
+	if root not in level_path.parents:
+		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
+	pathlib.Path(level_path).mkdir(exist_ok=True)
 	for file in request.files['tests']:
-		async with aiofiles.open(f'levels/{level}/{file.name}', 'w') as f:
+		path = level_path/file.name
+		if root not in path.parents:
+			return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
+		async with aiofiles.open(path, 'w') as f:
 			await f.write(file.body.decode('utf-8'))
 
 	await request.app.ctx.db['levels'].insert_one(
