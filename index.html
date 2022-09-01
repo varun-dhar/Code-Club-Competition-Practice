@@ -11,7 +11,7 @@
 </ul>
 <script>
 	window.addEventListener("load",()=>{
-		fetch(window.location.href+"/data").then(async (resp)=>{
+		fetch("/data").then(async (resp)=>{
         	const res = await resp.json();
 			const list = document.getElementById('levels');
             for(const level of res.levels){
