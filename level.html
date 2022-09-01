@@ -24,6 +24,7 @@
     window.addEventListener('load', () => {
         fetch(document.location.href+'/data').then(async (resp) => {
             const res = await resp.json();
+            document.getElementById('title').innerText = `Level ${res.level}`;
 
             const leaderboardLink = document.getElementById('leaderboardLink');
             leaderboardLink.href = `/leaderboards/${res.level}`;
