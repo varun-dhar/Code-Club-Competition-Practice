@@ -358,7 +358,7 @@ async def login(request):
 	res.cookies['session_token']['max-age'] = 60 * 60
 	res.cookies['session_token']['secure'] = True
 	res.cookies['session_token']['httponly'] = True
-	# res.cookies['session_token']['domain'] = request.app.ctx.domain
+	res.cookies['session_token']['domain'] = request.app.ctx.domain
 	return res
 
 
