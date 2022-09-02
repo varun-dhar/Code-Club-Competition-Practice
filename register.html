@@ -19,7 +19,7 @@
 	<label for="confirm_password">Confirm password:</label>
 	<input type="password" name="confirm_password" id="confirm_password"/>
 	<br/>
-	<input type="submit"/>
+	<input id="submitButton" type="submit"/>
 </form>
 <br/>
 <a href="/login">Login</a>
@@ -28,6 +28,8 @@
         const form = document.getElementById('regForm');
         form.addEventListener('submit', (event) => {
             event.preventDefault();
+            const submitButton = document.getElementById('submitButton');
+			submitButton.disabled = true;
             const data = new FormData(form);
             fetch('/register', {method: "POST", body: data}).then(async (resp) => {
                 const res = await resp.json();
@@ -36,6 +38,7 @@
                     window.location.replace('/');
                 } else {
                     alert(res.error);
+                    submitButton.disabled = false;
                 }
             });
         });
