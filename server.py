@@ -287,7 +287,6 @@ async def register(request):
 														  '''
 												}]}) as res:
 		data = await res.json()
-		print(data)
 		if data['Messages'][0]['Status'] != 'success':
 			return sanic.response.json(
 				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
