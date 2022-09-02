@@ -254,6 +254,7 @@ async def register(request):
 	request.app.ctx.registrants.add(email)
 
 	if await request.app.ctx.db['user_data'].find_one({'email': email}):
+		request.app.ctx.registrants.remove(email)
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
@@ -288,6 +289,7 @@ async def register(request):
 												}]}) as res:
 		data = await res.json()
 		if data['Messages'][0]['Status'] != 'success':
+			request.app.ctx.registrants.remove(email)
 			return sanic.response.json(
 				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
 
