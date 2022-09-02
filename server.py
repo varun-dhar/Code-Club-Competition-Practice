@@ -311,6 +311,10 @@ async def login(request):
 	if not record:
 		return sanic.response.json({'success': False, 'error': 'invalid email/password'}, status=400)
 
+	user_data = await request.app.ctx.db['user_data'].find_one({'email':email})
+	if not user_data or not user_data['verified']:
+		return sanic.response.json({'success': False, 'error': 'unverified account'}, status=400)
+
 	loop = asyncio.get_event_loop()
 	with concurrent.futures.ThreadPoolExecutor() as pool:
 		hasher = argon2.PasswordHasher()
