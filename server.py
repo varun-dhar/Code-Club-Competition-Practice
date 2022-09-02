@@ -276,11 +276,15 @@ async def register(request):
 														}],
 													'Subject': 'Verify your HOC Code Competition Account',
 													'HTMLPart': f'''<a href="https://{request.app.ctx.domain}/verify/{verification}">Verify your email</a>
-														  You will not be able to log in or submit entries until your email is verified.
-														  \nDo not reply to this email; this inbox is not monitored.
+															<br/>
+														  <p>You will not be able to log in or submit entries until your email is verified.</p>
+														  <br/>
+														  <br/>
+														  <p>Do not reply to this email; this inbox is not monitored.</p>
 														  '''
 												}]}) as res:
 		data = await res.json()
+		print(data)
 		if data['Status'] != 'success':
 			return sanic.response.json(
 				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
