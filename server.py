@@ -193,7 +193,10 @@ async def run_test(request, level: int):
 
 	email = record['email']
 
-	file = request.files['file'][0].body.decode('utf-8')
+	try:
+		file = request.files['file'][0].body.decode('utf-8')
+	except UnicodeDecodeError:
+		return sanic.response.json({'success': False, 'error': 'Invalid file'}, status=400)
 
 	level_info = await request.app.ctx.db['levels'].find_one({'level': level})
 	exec_times = []
