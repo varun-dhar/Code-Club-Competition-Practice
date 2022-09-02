@@ -49,6 +49,7 @@ async def before_start(app, loop):
 	await app.ctx.db['user_data'].create_index('email', unique=True)
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
+	app.ctx.registrants = set()
 
 
 async def check_login(request):
@@ -243,12 +244,14 @@ async def register(request):
 			i not in request.form for i in
 			('name', 'email', 'password', 'confirm_password')) or not request.app.ctx.email_re.match(
 		request.form['email'][0]) or not request.app.ctx.pass_re.match(request.form['password'][0]) or \
-			request.form['password'][0] != request.form['confirm_password'][0]:
+			request.form['password'][0] != request.form['confirm_password'][0] or request.form['email'][0] in request.app.ctx.registrants:
 		return sanic.response.json({'success': False, 'error': 'invalid form'}, status=400)
 
 	del request.form['confirm_password'][0]
 
 	email = request.form['email'][0]
+
+	request.app.ctx.registrants.add(email)
 
 	if await request.app.ctx.db['user_data'].find_one({'email': email}):
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
@@ -295,6 +298,7 @@ async def register(request):
 	del verification
 	await request.app.ctx.db['user_data'].insert_one(
 		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False})
+	request.app.ctx.registrants.remove(email)
 	return sanic.response.json({'success': True})
 
 
