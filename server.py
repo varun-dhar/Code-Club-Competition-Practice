@@ -9,7 +9,6 @@ import aiohttp
 import argon2
 import secrets
 import concurrent.futures
-import aiosmtplib
 import re
 import statistics
 import pathlib
@@ -26,6 +25,8 @@ dotenv.load_dotenv()
 app = sanic.Sanic('runner')
 
 app.ctx.smtp_sender = os.getenv('SENDER_EMAIL')
+app.ctx.mailjet_user = os.getenv('MAILJET_USERNAME')
+app.ctx.mailjet_pass = os.getenv('MAILJET_PASSWORD')
 
 app.ctx.domain = os.getenv('DOMAIN')
 
@@ -48,10 +49,6 @@ async def before_start(app, loop):
 	await app.ctx.db['user_data'].create_index('email', unique=True)
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
-	app.ctx.smtp = aiosmtplib.SMTP(os.getenv('MAILJET_SRV'), os.getenv('MAILJET_PORT'))
-	await app.ctx.smtp.connect()
-	await app.ctx.smtp.starttls()
-	await app.ctx.smtp.login(os.getenv('MAILJET_USERNAME'), os.getenv('MAILJET_PASSWORD'))
 
 
 async def check_login(request):
@@ -159,12 +156,12 @@ async def add_level(request):
 	except:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	root = pathlib.Path('levels')
-	level_path = root/str(level)
+	level_path = root / str(level)
 	if root not in level_path.parents:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	pathlib.Path(level_path).mkdir(exist_ok=True)
 	for file in request.files['tests']:
-		path = level_path/file.name
+		path = level_path / file.name
 		if root not in path.parents:
 			return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 		async with aiofiles.open(path, 'w') as f:
@@ -262,16 +259,35 @@ async def register(request):
 		pwd_hash = await loop.run_in_executor(pool, hasher.hash, request.form['password'][0])
 		del request.form['password'][0]
 
+	verification = secrets.token_urlsafe(16)
+	async with request.app.ctx.session.post('https://api.mailjet.com/v3.1/send',
+											auth=aiohttp.BasicAuth(request.app.ctx.mailjet_user,
+																   request.app.ctx.mailjet_pass),
+											json={'Messages':
+												[{'From':
+													{
+														'Email': request.app.ctx.smtp_sender,
+														'Name': 'EBHS Code Club Competition'
+													},
+													'To':
+														[{
+															'Email': email,
+															'Name': request.form['name'][0]
+														}],
+													'Subject': 'Verify your HOC Code Competition Account',
+													'HTMLPart': f'''<a href="https://{request.app.ctx.domain}/verify/{verification}">Verify your email</a>
+														  You will not be able to log in or submit entries until your email is verified.
+														  \nDo not reply to this email; this inbox is not monitored.
+														  '''
+												}]}) as res:
+		data = await res.json()
+		if data['Status'] != 'success':
+			return sanic.response.json(
+				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
+
 	await request.app.ctx.db['hashes'].insert_one({'email': email, 'hash': pwd_hash})
 	del pwd_hash
-
-	verification = secrets.token_urlsafe(16)
 	await request.app.ctx.db['unverified'].insert_one({'email': email, 'verification': verification})
-	await request.app.ctx.smtp.sendmail(request.app.ctx.smtp_sender, email,
-										f'Subject: Verify your HOC Code Competition Account\n\n'
-										f'Verify your email at https://{request.app.ctx.domain}/verify/{verification}\n'
-										f'You will not be able to log in or submit entries until your email is verified.'
-										f'\n\nDo not reply to this email; this inbox is not monitored.')
 	del verification
 	await request.app.ctx.db['user_data'].insert_one(
 		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False})
@@ -311,7 +327,7 @@ async def login(request):
 	if not record:
 		return sanic.response.json({'success': False, 'error': 'invalid email/password'}, status=400)
 
-	user_data = await request.app.ctx.db['user_data'].find_one({'email':email})
+	user_data = await request.app.ctx.db['user_data'].find_one({'email': email})
 	if not user_data or not user_data['verified']:
 		return sanic.response.json({'success': False, 'error': 'unverified account'}, status=400)
 
@@ -346,4 +362,4 @@ async def logout(request):
 	return res
 
 
-app.run(host='0.0.0.0', port=443,ssl=os.getenv('CERT_DIR'))
+app.run(host='0.0.0.0', port=443, ssl=os.getenv('CERT_DIR'))
