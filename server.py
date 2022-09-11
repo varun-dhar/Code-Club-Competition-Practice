@@ -240,7 +240,7 @@ async def register(request):
 			await request.app.ctx.db['unverified'].update_one({'email': email},
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification}},
-															  upsert=True)).matchedCount >= 1:
+															  upsert=True)).matched_count >= 1:
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
