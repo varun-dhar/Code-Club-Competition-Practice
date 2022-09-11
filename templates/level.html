@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Level {{level}}</title>
+</head>
+<body>
+<a href="/">Home</a>
+<a href="/leaderboards/{{level}}">Leaderboard</a>
+<a href="/logout">Logout</a>
+<br/>
+<h2>Description</h2>
+<p style="white-space: pre-wrap">{{desc}}</p>
+<form name="submission" enctype="multipart/form-data">
+	<label for="lang">Language</label>
+	<select name="lang" id="lang">
+		{%for lang in langs%}
+			<option>{{lang}}</option>
+		{%endfor%}
+	</select>
+	<label for="file">File:</label>
+	<input type="file" name="file" id="file"/>
+	<br/>
+	<input id="submitButton" type="submit"/>
+</form>
+<script>
+    window.addEventListener('load', () => {
+        const form = document.submission;
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            const data = new FormData(form);
+            fetch('/test/{{level}}', {method: 'POST', body: data}).then(async (resp) => {
+                const res = await resp.json();
+                if (res.success) {
+                    alert('success');
+                } else {
+                    alert(res.error);
+                }
+                document.getElementById('file').value = null;
+                submitButton.disabled = false;
+            });
+        });
+    });
+</script>
+</body>
+</html>

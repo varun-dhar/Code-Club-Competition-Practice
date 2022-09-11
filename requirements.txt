@@ -6,3 +6,4 @@ aiosmtplib
 aiohttp
 aiofiles
 dnspython
+jinja2

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+</head>
+<body>
+<a href="/logout">Logout</a>
+<br/>
+<ul style="list-style: none">
+	{% for level in levels %}
+	<li><a href="/levels/{{level}}">Level {{level}}</a></li>
+	{%endfor%}
+</ul>
+</body>
+</html>

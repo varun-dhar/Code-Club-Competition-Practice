@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Leaderboard</title>
+	<style>
+        #table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+	</style>
+</head>
+<body>
+<a href="/">Home</a>
+<a href="/levels/{{ level }}">Level</a>
+<a href="/logout">Logout</a>
+<br/>
+<h2>Level {{ level }} Leaderboard</h2>
+<br/>
+<table>
+	<tr>
+		<th>Rank</th>
+		<th>Name</th>
+		<th>Median Execution Time</th>
+		<th>Mean Execution Time</th>
+	</tr>
+	{% for entry in entries %}
+		<tr>
+			<td>{{loop.index + 1}}</td>
+			<td>{{entry.name}}</td>
+			<td>{{entry.median}}</td>
+			<td>{{entry.mean}}</td>
+		</tr>
+	{% endfor %}
+</table>
+</body>
+</html>

@@ -13,6 +13,7 @@ import re
 import statistics
 import pathlib
 import dotenv
+import jinja2
 
 '''
 TODO
@@ -50,6 +51,7 @@ async def before_start(app, loop):
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
 	app.ctx.registrants = set()
+	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True)
 
 
 async def check_login(request):
@@ -70,25 +72,9 @@ async def check_login(request):
 async def home(request):
 	if (resp := await check_login(request)) is not None:
 		return resp
-	return await sanic.response.file('index.html')
-
-
-@app.get('/data')
-async def home_data(request):
-	if (resp := await check_login(request)) is not None:
-		return resp
-	return sanic.response.json(
-		{'levels': [record['level'] async for record in request.app.ctx.db['levels'].find().sort('level', 1)]})
-
-
-@app.get('/levels/<level:int>/data')
-async def level_data(request, level: int):
-	if (resp := await check_login(request)) is not None:
-		return resp
-	record = await request.app.ctx.db["levels"].find_one({"level": level})
-	if not record:
-		return sanic.response.empty(status=404)
-	return sanic.response.json({'langs': request.app.ctx.langs, 'level': level, 'desc': record['desc']})
+	template = request.app.ctx.environment.get_template('index.html')
+	return sanic.response.html(await template.render_async(
+		levels=[record['level'] async for record in request.app.ctx.db['levels'].find().sort('level', 1)]))
 
 
 @app.get('/levels/<level:int>')
@@ -98,20 +84,9 @@ async def level_pg(request, level: int):
 	record = await request.app.ctx.db["levels"].find_one({"level": level})
 	if not record:
 		return sanic.response.empty(status=404)
-	return await sanic.response.file('level.html')
-
-
-@app.get('/leaderboards/<level:int>/data')
-async def leaderboard_data(request, level: int):
-	if (resp := await check_login(request)) is not None:
-		return resp
-	if not (await request.app.ctx.db["levels"].find_one({"level": level})):
-		return sanic.response.empty(status=404)
-	data = []
-	async for record in request.app.ctx.db['leaderboard'].find({'level': level}).sort('median'):
-		user_data = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
-		data.append({'name': user_data['name'], 'mean': record['mean'], 'median': record['median']})
-	return sanic.response.json({'level': level, 'data': data})
+	template = request.app.ctx.environment.get_template('level.html')
+	return sanic.response.html(
+		await template.render_async(langs=request.app.ctx.langs.keys(), level=level, desc=record['desc']))
 
 
 @app.get('/leaderboards/<level:int>')
@@ -120,7 +95,13 @@ async def leaderboard_pg(request, level: int):
 		return resp
 	if not (await request.app.ctx.db["levels"].find_one({"level": level})):
 		return sanic.response.empty(status=404)
-	return await sanic.response.file('leaderboard.html')
+	entries = []
+	async for record in request.app.ctx.db['leaderboard'].find({'level': level}).sort('median'):
+		user_data = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
+		entries.append({'name': user_data['name'], 'mean': record['mean'], 'median': record['median']})
+
+	template = request.app.ctx.environment.get_template('leaderboard.html')
+	return sanic.response.html(await template.render_async(level=level, entries=entries))
 
 
 @app.get('/admin')
@@ -154,7 +135,7 @@ async def add_level(request):
 		return sanic.response.json({'success': False, 'error': 'Forbidden'}, status=403)
 	try:
 		level = int(request.form['level'][0])
-	except:
+	except ValueError:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	root = pathlib.Path('levels')
 	level_path = root / str(level)
@@ -247,17 +228,19 @@ async def register(request):
 			i not in request.form for i in
 			('name', 'email', 'password', 'confirm_password')) or not request.app.ctx.email_re.match(
 		request.form['email'][0]) or not request.app.ctx.pass_re.match(request.form['password'][0]) or \
-			request.form['password'][0] != request.form['confirm_password'][0] or request.form['email'][0] in request.app.ctx.registrants:
+			request.form['password'][0] != request.form['confirm_password'][0]:
 		return sanic.response.json({'success': False, 'error': 'invalid form'}, status=400)
 
 	del request.form['confirm_password'][0]
 
 	email = request.form['email'][0]
 
-	request.app.ctx.registrants.add(email)
-
-	if await request.app.ctx.db['user_data'].find_one({'email': email}):
-		request.app.ctx.registrants.remove(email)
+	verification = secrets.token_urlsafe(16)
+	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (
+			await request.app.ctx.db['unverified'].update_one({'email': email},
+															  {'$setOnInsert': {'email': email,
+																				'verification': verification}},
+															  upsert=True))['matchedCount'] >= 1:
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
@@ -266,7 +249,6 @@ async def register(request):
 		pwd_hash = await loop.run_in_executor(pool, hasher.hash, request.form['password'][0])
 		del request.form['password'][0]
 
-	verification = secrets.token_urlsafe(16)
 	async with request.app.ctx.session.post('https://api.mailjet.com/v3.1/send',
 											auth=aiohttp.BasicAuth(request.app.ctx.mailjet_user,
 																   request.app.ctx.mailjet_pass),
@@ -296,10 +278,10 @@ async def register(request):
 			return sanic.response.json(
 				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
 
+	del verification
+
 	await request.app.ctx.db['hashes'].insert_one({'email': email, 'hash': pwd_hash})
 	del pwd_hash
-	await request.app.ctx.db['unverified'].insert_one({'email': email, 'verification': verification})
-	del verification
 	await request.app.ctx.db['user_data'].insert_one(
 		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False})
 	request.app.ctx.registrants.remove(email)
