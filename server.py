@@ -236,11 +236,12 @@ async def register(request):
 	email = request.form['email'][0]
 
 	verification = secrets.token_urlsafe(16)
-	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (
+	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (doc := (
 			await request.app.ctx.db['unverified'].update_one({'email': email},
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification}},
-															  upsert=True)).matched_count >= 1:
+															  upsert=True))).matched_count >= 1:
+		print(doc)
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
