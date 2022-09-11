@@ -50,7 +50,6 @@ async def before_start(app, loop):
 	await app.ctx.db['user_data'].create_index('email', unique=True)
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
-	app.ctx.registrants = set()
 	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True)
 
 
@@ -241,7 +240,6 @@ async def register(request):
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification}},
 															  upsert=True))).matched_count >= 1:
-		print(doc.__dict__)
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
@@ -275,7 +273,6 @@ async def register(request):
 												}]}) as res:
 		data = await res.json()
 		if data['Messages'][0]['Status'] != 'success':
-			request.app.ctx.registrants.remove(email)
 			return sanic.response.json(
 				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
 
@@ -285,7 +282,6 @@ async def register(request):
 	del pwd_hash
 	await request.app.ctx.db['user_data'].insert_one(
 		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False})
-	request.app.ctx.registrants.remove(email)
 	return sanic.response.json({'success': True})
 
 
