@@ -50,7 +50,7 @@ async def before_start(app, loop):
 	await app.ctx.db['user_data'].create_index('email', unique=True)
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
-	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True)
+	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True, autoescape=True)
 
 
 async def check_login(request):
