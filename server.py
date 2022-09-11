@@ -158,7 +158,7 @@ async def add_level(request):
 async def run_test(request, level: int):
 	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files or \
 			(await request.app.ctx.db['levels'].find_one({'level': level})) is None \
-			or (lang_id := request.form['lang'][0]) not in request.app.ctx.langs.values():
+			or (lang_id := request.app.ctx.langs.get(request.form['lang'][0])) is None:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 
 	if 'session_token' not in request.cookies:
