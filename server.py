@@ -241,7 +241,7 @@ async def register(request):
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification}},
 															  upsert=True))).matched_count >= 1:
-		print(doc)
+		print(doc.__dict__)
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
