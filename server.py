@@ -50,7 +50,8 @@ async def before_start(app, loop):
 	await app.ctx.db['user_data'].create_index('email', unique=True)
 	await app.ctx.db['hashes'].create_index('email', unique=True)
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
-	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True, autoescape=True)
+	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
+											 autoescape=True)
 
 
 async def check_login(request):
@@ -248,6 +249,7 @@ async def register(request):
 		pwd_hash = await loop.run_in_executor(pool, hasher.hash, request.form['password'][0])
 		del request.form['password'][0]
 
+	template = request.app.ctx.environment.get_template('verify-email.html')
 	async with request.app.ctx.session.post('https://api.mailjet.com/v3.1/send',
 											auth=aiohttp.BasicAuth(request.app.ctx.mailjet_user,
 																   request.app.ctx.mailjet_pass),
@@ -255,21 +257,17 @@ async def register(request):
 												[{'From':
 													{
 														'Email': request.app.ctx.smtp_sender,
-														'Name': 'EBHS Code Club Competition'
+														'Name': 'EBPracticode'
 													},
 													'To':
 														[{
 															'Email': email,
 															'Name': request.form['name'][0]
 														}],
-													'Subject': 'Verify your HOC Code Competition Account',
-													'HTMLPart': f'''<a href="https://{request.app.ctx.domain}/verify/{verification}">Verify your email</a>
-															<br/>
-														  <p>You will not be able to log in or submit entries until your email is verified.</p>
-														  <br/>
-														  <br/>
-														  <p>Do not reply to this email; this inbox is not monitored.</p>
-														  '''
+													'Subject': 'Verify your EBPracticode account',
+													'HTMLPart': (
+															await template.render_async(domain=request.app.ctx.domain,
+																						verification=verification))
 												}]}) as res:
 		data = await res.json()
 		if data['Messages'][0]['Status'] != 'success':
@@ -288,10 +286,11 @@ async def register(request):
 @app.get('/verify/<verification:str>')
 async def verify(request, verification: str):
 	record = await request.app.ctx.db['unverified'].find_one_and_delete({'verification': verification})
+	template = request.app.ctx.environment.get_template('verify.html')
 	if not record:
-		return sanic.response.html('<p>Unknown or already verified account</p>', status=400)
+		return sanic.response.html((await template.render_async(message='Unknown or already verified account')), status=400)
 	await request.app.ctx.db['user_data'].update_one({'email': record['email']}, {'$set': {'verified': True}})
-	return sanic.response.redirect('/login')
+	return sanic.response.html(await template.render_async(message='Successfully verified'))
 
 
 @app.get('/login')
