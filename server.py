@@ -150,7 +150,7 @@ async def users_pg(request):
 	if (resp := await check_admin(request)) is not None:
 		return resp
 	template = request.app.ctx.environment.get_template('users.html')
-	records = await request.app.ctx.db['user_data'].find()
+	records = [record async for record in request.app.ctx.db['user_data'].find()]
 	return sanic.response.html(await template.render_async(users=records))
 
 
