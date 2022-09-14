@@ -156,7 +156,7 @@ async def users_pg(request):
 
 @app.post('/add_level')
 async def add_level(request):
-	if (resp := check_admin_api(request)) is not None:
+	if (resp := await check_admin_api(request)) is not None:
 		return resp
 	try:
 		level = int(request.form['level'][0])
@@ -181,7 +181,7 @@ async def add_level(request):
 
 @app.post('/delete_user')
 async def delete_user(request: sanic.Request):
-	if (resp := check_admin_api(request)) is not None:
+	if (resp := await check_admin_api(request)) is not None:
 		return resp
 
 	if (email := request.json.get('email')) is None:
