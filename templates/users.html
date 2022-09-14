@@ -23,8 +23,13 @@
 </table>
 <script>
 	function deleteUser(email){
-        fetch('/delete_user',{method: 'POST', body: JSON.stringify({email:email})}).then(()=>{
-            window.location.reload();
+        fetch('/delete_user',{method: 'POST', body: JSON.stringify({email:email})}).then(async (resp)=>{
+            const res = await resp.json();
+            if(!res.success){
+                alert(res.error);
+			}else{
+            	window.location.reload();
+			}
 		});
 	}
 </script>
