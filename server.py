@@ -138,6 +138,22 @@ async def admin_pg(request):
 	return await sanic.response.file('admin.html')
 
 
+@app.get('/admin/add_level')
+async def add_level_pg(request):
+	if (resp := await check_admin(request)) is not None:
+		return resp
+	return await sanic.response.file('add-level.html')
+
+
+@app.get('/admin/users')
+async def users_pg(request):
+	if (resp := await check_admin(request)) is not None:
+		return resp
+	template = request.app.ctx.environment.get_template('users.html')
+	records = await request.app.ctx.db['user_data'].find()
+	return sanic.response.html(await template.render_async(users=records))
+
+
 @app.post('/add_level')
 async def add_level(request):
 	if (resp := check_admin_api(request)) is not None:
@@ -170,7 +186,13 @@ async def delete_user(request: sanic.Request):
 
 	if (email := request.json.get('email')) is None:
 		return sanic.response.json({'success': False, 'error': 'No email provided'}, status=400)
+
 	db = request.app.ctx.db
+	if (record := await db['user_data'].find_one({'email': email})) is None:
+		return sanic.response.json({'success': False, 'error': 'Account does not exist'}, status=400)
+	if record['admin']:
+		return sanic.response.json({'success': False, 'error': 'Cannot delete admin account'}, status=400)
+
 	await db['hashes'].deleteOne({'email': email})
 	await db['leaderboard'].deleteMany({'email': email})
 	await db['sessions'].deleteMany({'email': email})
