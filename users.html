@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>User Management</title>
+</head>
+<body>
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Verified</th>
+		<th>Delete?</th>
+	</tr>
+	{% for user in users %}
+		<tr>
+			<td>{{user.name}}</td>
+			<td>{{user.email}}</td>
+			<td>{{user.verified}}</td>
+			<td><button onclick="deleteUser('{{user.email}}')">Delete</button></td>
+		</tr>
+	{%endfor%}
+</table>
+<script>
+	function deleteUser(email){
+        fetch('/delete_user',{method: 'POST', body: JSON.stringify({email:email})}).then(()=>{
+            window.location.reload();
+		});
+	}
+</script>
+</body>
+</html>

@@ -54,17 +54,44 @@ async def before_start(app, loop):
 											 autoescape=True)
 
 
-async def check_login(request):
+async def check_login_rec(request):
 	if 'session_token' not in request.cookies:
-		return sanic.response.redirect('/login')
-
+		return None
 	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
 	if not record:
+		return None
+	await request.app.ctx.db['sessions'].update_one({'token': request.cookies['session_token']},
+													[{'$set': {'last_login': datetime.datetime.utcnow()}}])
+	return record
+
+
+async def check_login(request):
+	if (await check_login_rec(request)) is not None:
+		return None
+	res = sanic.response.redirect('/login')
+	del res.cookies['session_token']
+	return res
+
+
+async def check_admin(request):
+	if (record := await check_login_rec(request)) is None:
 		res = sanic.response.redirect('/login')
 		del res.cookies['session_token']
 		return res
-	await request.app.ctx.db['sessions'].update_one({'token': request.cookies['session_token']},
-													[{'$set': {'last_login': datetime.datetime.utcnow()}}])
+	record = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
+	if not record['admin']:
+		return sanic.response.redirect('/')
+	return None
+
+
+async def check_admin_api(request):
+	if (record := await check_login_rec(request)) is None:
+		res = sanic.response.json({'success': False, 'error': 'Unauthorized'}, status=401)
+		del res.cookies['session_token']
+		return res
+	record = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
+	if not record['admin']:
+		return sanic.response.json({'success': False, 'error': 'Forbidden'}, status=403)
 	return None
 
 
@@ -106,33 +133,15 @@ async def leaderboard_pg(request, level: int):
 
 @app.get('/admin')
 async def admin_pg(request):
-	if 'session_token' not in request.cookies:
-		return sanic.response.redirect('/login')
-
-	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
-	if not record:
-		res = sanic.response.redirect('/login')
-		del res.cookies['session_token']
-		return res
-	record = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
-	if not record['admin']:
-		return sanic.response.redirect('/')
+	if (resp := await check_admin(request)) is not None:
+		return resp
 	return await sanic.response.file('admin.html')
 
 
 @app.post('/add_level')
 async def add_level(request):
-	if 'session_token' not in request.cookies:
-		return sanic.response.json({'success': False, 'error': 'Unauthorized'}, status=401)
-
-	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
-	if not record:
-		res = sanic.response.json({'success': False, 'error': 'Unauthorized'}, status=401)
-		del res.cookies['session_token']
-		return res
-	record = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
-	if not record['admin']:
-		return sanic.response.json({'success': False, 'error': 'Forbidden'}, status=403)
+	if (resp := check_admin_api(request)) is not None:
+		return resp
 	try:
 		level = int(request.form['level'][0])
 	except ValueError:
@@ -154,6 +163,20 @@ async def add_level(request):
 	return sanic.response.json({'success': True})
 
 
+@app.post('/delete_user')
+async def delete_user(request: sanic.Request):
+	if (resp := check_admin_api(request)) is not None:
+		return resp
+
+	if (email := request.json.get('email')) is None:
+		return sanic.response.json({'success': False, 'error': 'No email provided'}, status=400)
+	db = request.app.ctx.db
+	await db['hashes'].deleteOne({'email': email})
+	await db['leaderboard'].deleteMany({'email': email})
+	await db['sessions'].deleteMany({'email': email})
+	await db['user_data'].deleteOne({'email': email})
+
+
 @app.post('/test/<level:int>')
 async def run_test(request, level: int):
 	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files or \
@@ -161,11 +184,7 @@ async def run_test(request, level: int):
 			or (lang_id := request.app.ctx.langs.get(request.form['lang'][0])) is None:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 
-	if 'session_token' not in request.cookies:
-		return sanic.response.json({'success': False, 'error': 'Not logged in'}, status=400)
-
-	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
-	if not record:
+	if (record := await check_login_rec(request)) is None:
 		res = sanic.response.redirect('/login')
 		del res.cookies['session_token']
 		return res
@@ -207,7 +226,8 @@ async def run_test(request, level: int):
 	rank_data = await request.app.ctx.db['leaderboard'].find_one({'email': email, 'level': level})
 	if not rank_data or rank_data['mean'] > mean or rank_data['median'] > median:
 		await request.app.ctx.db['leaderboard'].update_one({'email': email, 'level': level},
-														   [{'$set': {'median': median, 'mean': mean}}], upsert=True)
+														   [{'$set': {'median': median, 'mean': mean, 'code': file}}],
+														   upsert=True)
 	return sanic.response.json({'success': True})
 
 
@@ -288,7 +308,8 @@ async def verify(request, verification: str):
 	record = await request.app.ctx.db['unverified'].find_one_and_delete({'verification': verification})
 	template = request.app.ctx.environment.get_template('verify.html')
 	if not record:
-		return sanic.response.html((await template.render_async(message='Unknown or already verified account')), status=400)
+		return sanic.response.html((await template.render_async(message='Unknown or already verified account')),
+								   status=400)
 	await request.app.ctx.db['user_data'].update_one({'email': record['email']}, {'$set': {'verified': True}})
 	return sanic.response.html(await template.render_async(message='Successfully verified'))
 
@@ -336,10 +357,10 @@ async def login(request):
 	await request.app.ctx.db['sessions'].insert_one({'email': email, 'token': token})
 	res = sanic.response.json({'success': True})
 	res.cookies['session_token'] = token
-	res.cookies['session_token']['max-age'] = 60 * 60
+	# res.cookies['session_token']['max-age'] = 60 * 60
 	res.cookies['session_token']['secure'] = True
 	res.cookies['session_token']['httponly'] = True
-	res.cookies['session_token']['domain'] = request.app.ctx.domain
+	res.cookies['session_token']['samesite'] = 'Strict'
 	return res
 
 
