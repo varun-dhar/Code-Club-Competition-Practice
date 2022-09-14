@@ -193,10 +193,10 @@ async def delete_user(request: sanic.Request):
 	if record['admin']:
 		return sanic.response.json({'success': False, 'error': 'Cannot delete admin account'}, status=400)
 
-	await db['hashes'].deleteOne({'email': email})
-	await db['leaderboard'].deleteMany({'email': email})
-	await db['sessions'].deleteMany({'email': email})
-	await db['user_data'].deleteOne({'email': email})
+	await db['hashes'].delete_one({'email': email})
+	await db['leaderboard'].delete_many({'email': email})
+	await db['sessions'].delete_many({'email': email})
+	await db['user_data'].delete_one({'email': email})
 
 
 @app.post('/test/<level:int>')
