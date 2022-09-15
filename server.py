@@ -38,9 +38,12 @@ app.ctx.pass_re = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Z
 app.ctx.langs = {'Java': 'java1800', 'C++': 'gsnapshot', 'C': 'cgsnapshot', 'Python3': 'python310', 'Go': 'gltip',
 				 'Kotlin': 'kotlinc1700', 'Ruby': 'ruby302', 'Rust': 'nightly', 'TypeScript': 'tsc_0_0_20_gc'}
 
+redirect = sanic.Sanic('http_redir')
+redirect.static('/.well-known','/var/www/.well-known',resource_type='dir')
+
 
 @app.before_server_start
-async def before_start(app, loop):
+async def before_start(app: sanic.Sanic, loop):
 	pathlib.Path('levels').mkdir(exist_ok=True)
 	app.ctx.db_client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv('MONGODB_URL'), tls=True,
 															   tlsCertificateKeyFile=os.getenv('MONGODB_CERT'),
@@ -52,6 +55,25 @@ async def before_start(app, loop):
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
 	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
 											 autoescape=True)
+	app.ctx.redirect = await redirect.create_server(port=80, return_asyncio_server=True)
+	await app.add_task(redirect_runner(redirect, app.ctx.redirect))
+
+
+@app.before_server_stop
+async def stop(app, _):
+	await app.ctx.redirect.close()
+
+
+async def redirect_runner(app: sanic.Sanic, app_server):
+	app.is_running = True
+	try:
+		app.signalize()
+		app.finalize()
+		app.state.is_started = True
+		await app_server.serve_forever()
+	finally:
+		app.is_running = False
+		app.is_stopping = True
 
 
 async def check_login_rec(request):
