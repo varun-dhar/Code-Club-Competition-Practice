@@ -72,16 +72,16 @@ def redirect_everything_else(request, exception):
 	return sanic.response.empty(status=400)
 
 
-async def redirect_runner(app: sanic.Sanic, app_server):
-	app.is_running = True
+async def redirect_runner(redirector: sanic.Sanic, app_server):
+	redirector.is_running = True
 	try:
-		app.signalize()
-		app.finalize()
-		app.state.is_started = True
+		redirector.signalize()
+		redirector.finalize()
+		redirector.state.is_started = True
 		await app_server.serve_forever()
 	finally:
-		app.is_running = False
-		app.is_stopping = True
+		redirector.is_running = False
+		redirector.is_stopping = True
 
 
 async def check_login_rec(request):
