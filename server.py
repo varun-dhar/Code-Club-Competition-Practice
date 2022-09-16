@@ -38,9 +38,6 @@ app.ctx.pass_re = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Z
 app.ctx.langs = {'Java': 'java1800', 'C++': 'gsnapshot', 'C': 'cgsnapshot', 'Python3': 'python310', 'Go': 'gltip',
 				 'Kotlin': 'kotlinc1700', 'Ruby': 'ruby302', 'Rust': 'nightly', 'TypeScript': 'tsc_0_0_20_gc'}
 
-redirect = sanic.Sanic('http_redir')
-redirect.static('/.well-known', '/var/www/.well-known', resource_type='dir')
-
 
 @app.before_server_start
 async def before_start(app: sanic.Sanic, loop):
@@ -55,33 +52,6 @@ async def before_start(app: sanic.Sanic, loop):
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
 	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
 											 autoescape=True)
-	app.ctx.redirect = await redirect.create_server(host='0.0.0.0', port=80, return_asyncio_server=True)
-	await app.add_task(redirect_runner(redirect, app.ctx.redirect))
-
-
-@app.before_server_stop
-async def stop(app, _):
-	await app.ctx.redirect.close()
-
-
-@redirect.exception(sanic.exceptions.NotFound, sanic.exceptions.MethodNotSupported)
-def redirect_everything_else(request, exception):
-	server, path = request.server_name, request.path
-	if server and path.startswith("/"):
-		return sanic.response.redirect(f"https://{server}{path}", status=308)
-	return sanic.response.empty(status=400)
-
-
-async def redirect_runner(redirector: sanic.Sanic, app_server):
-	redirector.is_running = True
-	try:
-		redirector.signalize()
-		redirector.finalize()
-		redirector.state.is_started = True
-		await app_server.serve_forever()
-	finally:
-		redirector.is_running = False
-		redirector.is_stopping = True
 
 
 async def check_login_rec(request):
@@ -426,4 +396,4 @@ async def logout(request):
 	return res
 
 
-app.run(host='0.0.0.0', port=443, ssl=os.getenv('CERT_DIR'))
+app.run()
