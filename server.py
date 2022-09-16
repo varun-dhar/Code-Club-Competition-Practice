@@ -1,7 +1,7 @@
 import datetime
 
 import motor.motor_asyncio
-import sanic, sanic.response
+import sanic, sanic.response, sanic.exceptions
 import os
 import asyncio
 import aiofiles
@@ -39,7 +39,7 @@ app.ctx.langs = {'Java': 'java1800', 'C++': 'gsnapshot', 'C': 'cgsnapshot', 'Pyt
 				 'Kotlin': 'kotlinc1700', 'Ruby': 'ruby302', 'Rust': 'nightly', 'TypeScript': 'tsc_0_0_20_gc'}
 
 redirect = sanic.Sanic('http_redir')
-redirect.static('/.well-known','/var/www/.well-known',resource_type='dir')
+redirect.static('/.well-known', '/var/www/.well-known', resource_type='dir')
 
 
 @app.before_server_start
@@ -62,6 +62,14 @@ async def before_start(app: sanic.Sanic, loop):
 @app.before_server_stop
 async def stop(app, _):
 	await app.ctx.redirect.close()
+
+
+@redirect.exception(sanic.exceptions.NotFound, sanic.exceptions.MethodNotSupported)
+def redirect_everything_else(request, exception):
+	server, path = request.server_name, request.path
+	if server and path.startswith("/"):
+		return sanic.response.redirect(f"https://{server}{path}", status=308)
+	return sanic.response.empty(status=400)
 
 
 async def redirect_runner(app: sanic.Sanic, app_server):
