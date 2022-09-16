@@ -55,7 +55,7 @@ async def before_start(app: sanic.Sanic, loop):
 	app.ctx.session = aiohttp.ClientSession(loop=loop)
 	app.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
 											 autoescape=True)
-	app.ctx.redirect = await redirect.create_server(port=80, return_asyncio_server=True)
+	app.ctx.redirect = await redirect.create_server(host=app.ctx.domain,port=80, return_asyncio_server=True)
 	await app.add_task(redirect_runner(redirect, app.ctx.redirect))
 
 
@@ -426,4 +426,4 @@ async def logout(request):
 	return res
 
 
-app.run(host='0.0.0.0', port=443, ssl=os.getenv('CERT_DIR'))
+app.run(host=app.ctx.domain, port=443, ssl=os.getenv('CERT_DIR'))
