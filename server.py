@@ -1,19 +1,21 @@
-import datetime
-
-import motor.motor_asyncio
-import sanic, sanic.response, sanic.exceptions
-import os
 import asyncio
+import concurrent.futures
+import datetime
+import os
+import pathlib
+import re
+import secrets
+import statistics
+
 import aiofiles
 import aiohttp
 import argon2
-import secrets
-import concurrent.futures
-import re
-import statistics
-import pathlib
 import dotenv
 import jinja2
+import motor.motor_asyncio
+import sanic
+import sanic.exceptions
+import sanic.response
 
 '''
 TODO
@@ -54,6 +56,7 @@ async def before_start(app: sanic.Sanic, loop):
 											 autoescape=True)
 
 
+# Returns the session record if it exists and updates the login time
 async def check_login_rec(request):
 	if 'session_token' not in request.cookies:
 		return None
@@ -65,6 +68,7 @@ async def check_login_rec(request):
 	return record
 
 
+# Returns a failure response if not logged in, None otherwise
 async def check_login(request):
 	if (await check_login_rec(request)) is not None:
 		return None
@@ -164,12 +168,12 @@ async def add_level(request):
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	root = pathlib.Path('levels')
 	level_path = root / str(level)
-	if root not in level_path.parents:
+	if root not in level_path.resolve().parents:
 		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 	pathlib.Path(level_path).mkdir(exist_ok=True)
 	for file in request.files['tests']:
 		path = level_path / file.name
-		if root not in path.parents:
+		if root not in path.resolve().parents:
 			return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
 		async with aiofiles.open(path, 'w') as f:
 			await f.write(file.body.decode('utf-8'))
@@ -202,10 +206,12 @@ async def delete_user(request: sanic.Request):
 
 @app.post('/test/<level:int>')
 async def run_test(request, level: int):
-	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files or \
-			(await request.app.ctx.db['levels'].find_one({'level': level})) is None \
-			or (lang_id := request.app.ctx.langs.get(request.form['lang'][0])) is None:
-		return sanic.response.json({'success': False, 'error': 'Invalid form'}, status=400)
+	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files:
+		return sanic.response.json({'success': False, 'error': 'Missing fields'}, status=400)
+	if (await request.app.ctx.db['levels'].find_one({'level': level})) is None:
+		return sanic.response.json({'success': False, 'error': 'No such level'}, status=400)
+	if (lang_id := request.app.ctx.langs.get(request.form['lang'][0])) is None:
+		return sanic.response.json({'success': False, 'error': 'Invalid language'}, status=400)
 
 	if (record := await check_login_rec(request)) is None:
 		res = sanic.response.redirect('/login')
@@ -267,23 +273,28 @@ async def register_pg(request):
 
 @app.post('/register')
 async def register(request):
-	if not request.form or any(
-			i not in request.form for i in
-			('name', 'email', 'password', 'confirm_password')) or not request.app.ctx.email_re.match(
-		request.form['email'][0]) or not request.app.ctx.pass_re.match(request.form['password'][0]) or \
-			request.form['password'][0] != request.form['confirm_password'][0]:
-		return sanic.response.json({'success': False, 'error': 'invalid form'}, status=400)
+	if not request.form or any(field not in request.form for field in ('name', 'email', 'password', 'confirm_password')):
+		return sanic.response.json({'success': False, 'error': 'Missing fields'}, status=400)
+
+	if not request.app.ctx.email_re.match(request.form['email'][0]):
+		return sanic.response.json({'success': False, 'error': 'Invalid email'}, status=400)
+
+	if not request.app.ctx.pass_re.match(request.form['password'][0]):
+		return sanic.response.json({'success': False, 'error': 'Password does not meet requirements'}, status=400)
+
+	if not request.form['password'][0] != request.form['confirm_password'][0]:
+		return sanic.response.json({'success': False, 'error': 'Passwords do not match'}, status=400)
 
 	del request.form['confirm_password'][0]
 
 	email = request.form['email'][0]
 
 	verification = secrets.token_urlsafe(16)
-	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (doc := (
+	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (
 			await request.app.ctx.db['unverified'].update_one({'email': email},
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification}},
-															  upsert=True))).matched_count >= 1:
+															  upsert=True)).matched_count >= 1:
 		return sanic.response.json({'success': False, 'error': 'account exists'}, status=400)
 
 	loop = asyncio.get_event_loop()
@@ -315,7 +326,7 @@ async def register(request):
 		data = await res.json()
 		if data['Messages'][0]['Status'] != 'success':
 			return sanic.response.json(
-				{'success': False, 'error': 'Failed to send verification email. Please try again later.'})
+				{'success': False, 'error': 'Failed to send verification email. Please try again later.'}, status=503)
 
 	del verification
 
