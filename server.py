@@ -139,14 +139,14 @@ async def leaderboard_pg(request, level: int):
 async def admin_pg(request):
 	if (resp := await check_admin(request)) is not None:
 		return resp
-	return await sanic.response.file('admin.html')
+	return await sanic.response.file('html/admin.html')
 
 
 @app.get('/admin/add_level')
 async def add_level_pg(request):
 	if (resp := await check_admin(request)) is not None:
 		return resp
-	return await sanic.response.file('add-level.html')
+	return await sanic.response.file('html/add-level.html')
 
 
 @app.get('/admin/users')
@@ -265,7 +265,7 @@ async def register_pg(request):
 	if 'session_token' in request.cookies and (
 			await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})):
 		return sanic.response.redirect('/')
-	res = await sanic.response.file('register.html')
+	res = await sanic.response.file('html/register.html')
 	if 'session_token' in request.cookies:
 		del res.cookies['session_token']
 	return res
@@ -351,11 +351,11 @@ async def verify(request, verification: str):
 @app.get('/login')
 async def login_pg(request):
 	if 'session_token' not in request.cookies:
-		return await sanic.response.file('login.html')
+		return await sanic.response.file('html/login.html')
 
 	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
 	if not record:
-		res = await sanic.response.file('login.html')
+		res = await sanic.response.file('html/login.html')
 		del res.cookies['session_token']
 		return res
 	return sanic.response.redirect('/')
