@@ -23,7 +23,9 @@
 </table>
 <script>
 	function deleteUser(email){
-        confirm(`Delete user ${email}?`);
+        if(!confirm(`Delete user ${email}?`)){
+            return;
+		}
         fetch('/delete_user',{method: 'POST', body: JSON.stringify({email:email})}).then(async (resp)=>{
             const res = await resp.json();
             if(!res.success){
