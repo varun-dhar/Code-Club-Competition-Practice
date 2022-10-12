@@ -39,6 +39,7 @@ app.ctx.pass_re = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Z
 
 app.ctx.langs = {'Java': 'java1800', 'C++': 'gsnapshot', 'C': 'cgsnapshot', 'Python3': 'python310', 'Go': 'gltip',
 				 'Kotlin': 'kotlinc1700', 'Ruby': 'ruby302', 'Rust': 'nightly', 'TypeScript': 'tsc_0_0_20_gc'}
+app.ctx.compile_args = {'C++': '-O3', 'C': '-O3', 'Kotlin': '-opt', 'Rust': '-C opt-level=3'}
 
 
 @app.before_server_start
@@ -210,7 +211,9 @@ async def run_test(request, level: int):
 		return sanic.response.json({'success': False, 'error': 'Missing fields'}, status=400)
 	if (await request.app.ctx.db['levels'].find_one({'level': level})) is None:
 		return sanic.response.json({'success': False, 'error': 'No such level'}, status=400)
-	if (lang_id := request.app.ctx.langs.get(request.form['lang'][0])) is None:
+
+	lang = request.form['lang'][0]
+	if (lang_id := request.app.ctx.langs.get(lang)) is None:
 		return sanic.response.json({'success': False, 'error': 'Invalid language'}, status=400)
 
 	if (record := await check_login_rec(request)) is None:
@@ -235,6 +238,7 @@ async def run_test(request, level: int):
 		async with request.app.ctx.session.post(
 				f'https://godbolt.org/api/compiler/{lang_id}/compile',
 				json={'source': file, 'options': {
+					'userArguments': app.ctx.compile_args.get(lang, ''),
 					'executeParameters': {
 						'stdin': test_input}, 'compilerOptions': {'executorRequest': True},
 					'filters': {'execute': True}}},
@@ -273,7 +277,8 @@ async def register_pg(request):
 
 @app.post('/register')
 async def register(request):
-	if not request.form or any(field not in request.form for field in ('name', 'email', 'password', 'confirm_password')):
+	if not request.form or any(
+			field not in request.form for field in ('name', 'email', 'password', 'confirm_password')):
 		return sanic.response.json({'success': False, 'error': 'Missing fields'}, status=400)
 
 	if not request.app.ctx.email_re.match(request.form['email'][0]):
