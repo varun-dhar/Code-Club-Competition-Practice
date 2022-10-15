@@ -10,7 +10,7 @@ __all__ = ['group']
 group = sanic.Blueprint.group(admin.bp, account.bp, misc.bp)
 
 
-@group.on_request
+@group.middleware('request', priority=1)
 async def check_login(request):
 	if 'session_token' not in request.cookies:
 		return sanic.response.redirect('/login')

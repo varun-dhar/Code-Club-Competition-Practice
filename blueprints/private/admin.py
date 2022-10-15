@@ -5,7 +5,7 @@ bp.static('/admin', 'html/admin.html')
 bp.static('/add-level', 'html/add-level.html')
 
 
-@bp.middleware('request')
+@bp.on_request
 async def check_admin(request):
 	record = await request.app.ctx.db['user_data'].find_one({'email': request.ctx.session_record['email']})
 	if not record['admin']:
