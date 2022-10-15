@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Level {{level}}</title>
-	<script src="/assets/level.js"></script>
+	<script src="/assets/scripts/level.js"></script>
+	<link rel="stylesheet" href="/assets/styles/level.css"/>
 </head>
 <body>
 <a href="/">Home</a>
@@ -11,7 +12,7 @@
 <a href="/logout">Logout</a>
 <br/>
 <h2>Description</h2>
-<p style="white-space: pre-wrap">{{desc}}</p>
+<p id="description">{{desc}}</p>
 <form name="submission" enctype="multipart/form-data">
 	<label for="lang">Language</label>
 	<select name="lang" id="lang">

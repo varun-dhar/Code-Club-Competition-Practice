@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 	<title>Home</title>
+	<link rel="stylesheet" href="/assets/styles/index.css"/>
 </head>
 <body>
 <a href="/logout">Logout</a>
 <br/>
-<ul style="list-style: none">
+<ul id="level-list">
 	{% for level in levels %}
 	<li><a href="/levels/{{level}}">Level {{level}}</a></li>
 	{%endfor%}

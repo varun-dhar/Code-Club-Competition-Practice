@@ -8,10 +8,10 @@ import aiohttp
 bp = sanic.Blueprint('account-public')
 bp.static('/register', 'html/register.html', name='register')
 bp.static('/login', 'html/login.html', name='login')
-bp.static('/assets/register.js', 'assets/register.js', name='register-js')
-bp.static('/assets/login.js', 'assets/login.js', name='login-js')
-bp.static('/assets/verify-success.js', 'assets/verify-success.js', name='verify-success-js')
-bp.static('/assets/verify-fail.js', 'assets/verify-fail.js', name='verify-fail-js')
+bp.static('/assets/scripts/register.js', 'assets/scripts/register.js', name='register-js')
+bp.static('/assets/scripts/login.js', 'assets/scripts/login.js', name='login-js')
+bp.static('/assets/scripts/verify-success.js', 'assets/scripts/verify-success.js', name='verify-success-js')
+bp.static('/assets/scripts/verify-fail.js', 'assets/scripts/verify-fail.js', name='verify-fail-js')
 
 
 @bp.post('/register')
