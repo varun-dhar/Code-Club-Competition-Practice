@@ -6,8 +6,8 @@ import argon2
 import aiohttp
 
 bp = sanic.Blueprint('account-public')
-bp.static('html/register.html')
-bp.static('html/login.html')
+bp.static('register.html', 'html/register.html')
+bp.static('login.html', 'html/login.html')
 
 
 @bp.post('/register')

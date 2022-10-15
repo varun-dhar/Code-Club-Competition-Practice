@@ -1,9 +1,8 @@
 import sanic
-import datetime
 
 bp = sanic.Blueprint('admin')
-bp.static('html/admin.html')
-bp.static('html/add-level.html')
+bp.static('admin.html', 'html/admin.html')
+bp.static('add-level.html', 'html/add-level.html')
 
 
 @bp.middleware('request')
