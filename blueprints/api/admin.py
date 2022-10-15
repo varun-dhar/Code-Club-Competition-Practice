@@ -18,7 +18,7 @@ async def add_level(request):
 		level = int(request.form['level'][0])
 	except ValueError:
 		return sanic.response.text('Level must be an integer', status=400)
-	root = pathlib.Path('levels')
+	root = pathlib.Path('levels').resolve()
 	level_path = root / str(level)
 	if root not in level_path.resolve().parents:
 		return sanic.response.text('Invalid level name', status=400)
