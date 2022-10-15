@@ -1,8 +1,8 @@
 import sanic
 
 bp = sanic.Blueprint('admin')
-bp.static('/admin', 'html/admin.html')
-bp.static('/admin/add_level', 'html/add-level.html')
+bp.static('/admin', 'html/admin.html', name='admin')
+bp.static('/admin/add_level', 'html/add-level.html', name='add-level')
 
 
 @bp.on_request
