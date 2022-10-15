@@ -31,12 +31,11 @@
             const submitButton = document.getElementById('submitButton');
             submitButton.disabled = true;
             const data = new FormData(form);
-            fetch('/test/{{level}}', {method: 'POST', body: data}).then(async (resp) => {
-                const res = await resp.json();
-                if (res.success) {
+            fetch(window.location.href, {method: 'POST', body: data}).then(async (resp) => {
+                if (resp.ok) {
                     alert('success');
                 } else {
-                    alert(res.error);
+                    alert(await resp.text());
                 }
                 document.getElementById('file').value = null;
                 submitButton.disabled = false;

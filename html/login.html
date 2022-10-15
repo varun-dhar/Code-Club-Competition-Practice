@@ -22,11 +22,10 @@
             event.preventDefault();
             const data = new FormData(form);
             fetch('/login', {method: "POST", body: data}).then(async (resp) => {
-                const res = await resp.json();
-                if (res.success) {
+                if (resp.ok) {
                     window.location.replace('/');
                 } else {
-                    alert(res.error);
+                    alert(await resp.text());
                 }
             });
         });

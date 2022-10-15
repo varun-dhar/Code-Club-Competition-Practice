@@ -31,12 +31,11 @@
 			submitButton.disabled = true;
             const data = new FormData(form);
             fetch('/register', {method: "POST", body: data}).then(async (resp) => {
-                const res = await resp.json();
-                if (res.success) {
+                if (resp.ok) {
                     alert('Registered. Check your email to verify your account. The verification email may be in your junk folder.')
                     window.location.replace('/');
                 } else {
-                    alert(res.error);
+                    alert(await resp.text());
                     submitButton.disabled = false;
                 }
             });
