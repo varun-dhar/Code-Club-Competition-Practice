@@ -1,8 +1,8 @@
 import sanic
 
-import api
-import private
-import public
+from . import api
+from . import private
+from . import public
 
 __all__ = ['blueprints']
 

@@ -1,5 +1,6 @@
 import sanic
-import account
+
+from . import account
 
 __all__ = ['group']
 

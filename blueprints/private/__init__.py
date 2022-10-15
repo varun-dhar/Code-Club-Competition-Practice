@@ -1,9 +1,9 @@
 import sanic
 import datetime
 
-import admin
-import account
-import misc
+from . import admin
+from . import account
+from . import misc
 
 __all__ = ['group']
 

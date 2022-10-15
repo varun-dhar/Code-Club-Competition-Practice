@@ -1,8 +1,8 @@
 import sanic
 import datetime
 
-import admin
-import user
+from . import admin
+from . import user
 
 __all__ = ['group']
 
