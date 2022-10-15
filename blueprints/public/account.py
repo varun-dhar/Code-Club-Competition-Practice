@@ -26,7 +26,7 @@ async def register(request):
 	if not request.app.ctx.pass_re.match(request.form['password'][0]):
 		return sanic.response.text('Password does not meet requirements', status=400)
 
-	if not request.form['password'][0] != request.form['confirm_password'][0]:
+	if request.form['password'][0] != request.form['confirm_password'][0]:
 		return sanic.response.text('Passwords do not match', status=400)
 
 	del request.form['confirm_password'][0]
