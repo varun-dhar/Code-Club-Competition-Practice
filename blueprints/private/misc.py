@@ -1,6 +1,7 @@
 import sanic
 
 bp = sanic.Blueprint('misc')
+bp.static('/assets/level.js', 'assets/level.js', name='level-js')
 
 
 @bp.get('/')

@@ -3,6 +3,7 @@ import sanic
 bp = sanic.Blueprint('admin')
 bp.static('/admin', 'html/admin.html', name='admin')
 bp.static('/admin/add_level', 'html/add-level.html', name='add-level')
+bp.static('/assets/delete-user.js', 'assets/delete-user.js', name='delete-user-js')
 
 
 @bp.on_request

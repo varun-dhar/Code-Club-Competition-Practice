@@ -8,6 +8,10 @@ import aiohttp
 bp = sanic.Blueprint('account-public')
 bp.static('/register', 'html/register.html', name='register')
 bp.static('/login', 'html/login.html', name='login')
+bp.static('/assets/register.js', 'assets/register.js', name='register-js')
+bp.static('/assets/login.js', 'assets/login.js', name='login-js')
+bp.static('/assets/verify-success.js', 'assets/verify-success.js', name='verify-success-js')
+bp.static('/assets/verify-fail.js', 'assets/verify-fail.js', name='verify-fail-js')
 
 
 @bp.post('/register')
@@ -81,10 +85,9 @@ async def verify(request, verification: str):
 	record = await request.app.ctx.db['unverified'].find_one_and_delete({'verification': verification})
 	template = request.app.ctx.environment.get_template('verify.html')
 	if not record:
-		return sanic.response.html((await template.render_async(message='Unknown or already verified account')),
-								   status=400)
+		return sanic.response.html((await template.render_async(success=False)), status=400)
 	await request.app.ctx.db['user_data'].update_one({'email': record['email']}, {'$set': {'verified': True}})
-	return sanic.response.html(await template.render_async(message='Successfully verified'))
+	return sanic.response.html(await template.render_async(success=True))
 
 
 @bp.post('/login')

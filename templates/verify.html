@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<title>Verify Email</title>
+	{% if success %}
+		<script src="/assets/verify-success.js"></script>
+	{% else %}
+		<script src="/assets/verify-fail.js"></script>
+	{% endif %}
 </head>
-<body>
-<script>
-  alert("{{message}}");
-  window.location.replace('/login');
-</script>
-</body>
 </html>
