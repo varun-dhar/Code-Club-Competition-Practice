@@ -2,26 +2,60 @@
 <html lang="en">
 <head>
 	<title>Register</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&ampdisplay=swap" />
 	<script src="/assets/scripts/register.js"></script>
+	<link rel="stylesheet" href="/assets/styles/register.css"/>
 </head>
 <body>
 <form id="regForm" enctype="multipart/form-data">
-	<label for="name">Name:</label>
-	<input type="text" name="name" id="name"/>
-	<br/>
-	<label for="email">Email:</label>
-	<input type="text" name="email" id="email"/>
-	<br/>
-	<label for="password">Password (must be at least 8 characters long, contain a number, and a special
-		character):</label>
-	<input type="password" name="password" id="password"/>
-	<br/>
-	<label for="confirm_password">Confirm password:</label>
-	<input type="password" name="confirm_password" id="confirm_password"/>
-	<br/>
-	<input id="submitButton" type="submit"/>
+	<div>
+		<div class="register-register">
+			<div class="register-frame1">
+				<span class="register-text"><span>Register</span></span>
+				<div class="register-frame3">
+					<input
+							type="text"
+							placeholder="Name"
+							id="name"
+							name="name"
+							required
+							class="register-textinput input"
+					/>
+					<input
+							type="email"
+							placeholder="Email"
+							id="email"
+							name="email"
+							required
+							class="register-textinput1 input"
+					/>
+					<input
+							type="password"
+							placeholder="Password"
+							id="password"
+							name="password"
+							required
+							title="(must be at least 8 characters long, and contain both a number and a special character)"
+							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]&#123;8,100&#125;$"
+							class="register-textinput2 input"
+					/>
+					<input
+							type="password"
+							placeholder="Confirm Password"
+							id="confirm_password"
+							name="confirm_password"
+							required
+							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]&#123;8,100&#125;$"
+							class="register-textinput3 input"
+					/>
+					<button type="submit" class="register-login-button">
+						<span class="register-text2"><span>Register</span></span>
+					</button>
+				</div>
+				<span class="register-text4"><span>Login</span></span>
+			</div>
+		</div>
+	</div>
 </form>
-<br/>
-<a href="/login">Login</a>
 </body>
 </html>
