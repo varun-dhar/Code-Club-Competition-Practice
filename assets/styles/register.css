@@ -136,6 +136,7 @@ html, body {
     display: flex;
     overflow: hidden;
     position: relative;
+    align-self: center;
     align-items: flex-start;
     flex-shrink: 0;
     border-color: transparent;
@@ -144,22 +145,17 @@ html, body {
 }
 
 .register-text2 {
-    top: 6px;
-    left: 4px;
     color: rgba(239, 238, 238, 1);
     width: 276px;
     height: auto;
-    position: absolute;
     font-size: 12px;
-    align-self: auto;
+    align-self: center;
     font-style: SemiBold;
     text-align: center;
     font-family: Noto Sans;
     font-weight: 600;
     line-height: normal;
     font-stretch: normal;
-    margin-right: 0;
-    margin-bottom: 0;
     text-decoration: none;
 }
 
@@ -167,7 +163,7 @@ html, body {
     color: rgba(16, 185, 129, 1);
     height: auto;
     font-size: 12px;
-    align-self: auto;
+    align-self: center;
     font-style: SemiBold;
     text-align: center;
     font-family: Noto Sans;
