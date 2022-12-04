@@ -112,7 +112,7 @@ html, body {
     flex-shrink: 0;
     border-color: transparent;
     margin-right: 10px;
-    background-color: var(--dl-color-gray-black);
+    background-color: black;
 }
 
 .challenge-index-text06 {
@@ -131,19 +131,6 @@ html, body {
     text-decoration: none;
 }
 
-.challenge-index-line1 {
-    width: 2;
-    border: 2px dashed rgba(120, 120, 120, 0.4);
-    height: 50px;
-    display: flex;
-    position: relative;
-    align-items: flex-start;
-    flex-shrink: 0;
-    border-color: transparent;
-    margin-right: 10px;
-    background-color: var(--dl-color-gray-black);
-}
-
 .challenge-index-text08 {
     color: rgba(16, 185, 129, 1);
     height: auto;
@@ -158,26 +145,6 @@ html, body {
     margin-right: 10px;
     margin-bottom: 0;
     text-decoration: none;
-}
-
-.challenge-index-line2 {
-    width: 2;
-    height: 50px;
-    display: flex;
-    position: relative;
-    align-items: flex-start;
-    flex-shrink: 0;
-    border-color: transparent;
-    margin-right: 10px;
-    background-color: var(--dl-color-gray-black);
-}
-
-.challenge-index-line1 {
-    top: 50px;
-    left: 15.5px;
-    width: 50px;
-    height: 0px;
-    position: absolute;
 }
 
 .challenge-index-text10 {
