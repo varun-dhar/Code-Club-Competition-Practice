@@ -20,7 +20,7 @@ async def home(request):
 	async for level in request.app.ctx.db['levels'].find().sort('level', 1):
 		rank = 0
 		if level['level'] in solved:
-			rank = bisect.bisect_left(
+			rank = bisect.bisect(
 				[record async for record in request.app.ctx.db['leaderboard'].find({'level': level['level']}).sort('median')],
 				solved[level['level']], key=lambda x: x['median'])
 		levels.append({'name': level['level'], 'desc': level['desc'], 'rank': rank})
