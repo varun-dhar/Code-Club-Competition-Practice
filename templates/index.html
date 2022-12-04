@@ -17,30 +17,32 @@
 		<div class="challenge-index-frame8">
 			<span class="challenge-index-text04"><span>Challenges</span></span>
 			{% for level in levels %}
-			<div class="challenge-index-challenge-component">
-				{% if level.rank == 0 %}
-				<img class="challenge-index-completion-indicator" src="/assets/images/x.svg" alt="X">
-				{% else %}
-				<img class="challenge-index-completion-indicator" src="/assets/images/check.svg" alt="check">
-				{% endif %}
+			<a href="/levels/{{level.name}}">
+				<div class="challenge-index-challenge-component">
+					{% if level.rank == 0 %}
+						<img class="challenge-index-completion-indicator" src="/assets/images/x.svg" alt="X">
+					{% else %}
+						<img class="challenge-index-completion-indicator" src="/assets/images/check.svg" alt="check">
+					{% endif %}
 
-				<div class="challenge-index-line"></div>
-				<span class="challenge-index-text06"><span>Level {{level.name}}</span></span>
-				<div class="challenge-index-line"></div>
-				<span class="challenge-index-text08"><span>
-				{% if level.rank == 0 %}
-					Unsolved
-				{% else %}
-					Rank: #{{level.rank}}
-				{% endif %}
+					<div class="challenge-index-line"></div>
+					<span class="challenge-index-text06"><span>Level {{level.name}}</span></span>
+					<div class="challenge-index-line"></div>
+					<span class="challenge-index-text08"><span>
+					{% if level.rank == 0 %}
+						Unsolved
+					{% else %}
+						Rank: #{{level.rank}}
+					{% endif %}
 				</span></span>
-				<div class="challenge-index-line">
+					<div class="challenge-index-line">
 
-				</div>
-				<span class="challenge-index-text10">
+					</div>
+					<span class="challenge-index-text10">
          	   		<span>{{level.desc}}</span>
           		</span>
-			</div>
+				</div>
+			</a>
 			{% endfor %}
 		</div>
 	</div>
