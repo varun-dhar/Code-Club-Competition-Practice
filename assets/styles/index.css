@@ -22,7 +22,7 @@ html, body {
     align-self: stretch;
     align-items: flex-end;
     border-color: transparent;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     flex-direction: column;
 }
 
@@ -103,8 +103,7 @@ html, body {
 }
 
 .challenge-index-line {
-    width: 2;
-    border: 2px dashed rgba(120, 120, 120, 0.4);
+    width: 2px;
     height: 50px;
     display: flex;
     position: relative;

@@ -2,10 +2,12 @@ import sanic
 import bisect
 
 bp = sanic.Blueprint('misc')
-bp.static('/assets/styles/index.css', 'assets/styles/index.css')
-bp.static('/assets/styles/level.css', 'assets/styles/level.css')
-bp.static('/assets/styles/leaderboard.css', 'assets/styles/leaderboard.css')
+bp.static('/assets/styles/index.css', 'assets/styles/index.css', name='index-css')
+bp.static('/assets/styles/level.css', 'assets/styles/level.css', name='level-css')
+bp.static('/assets/styles/leaderboard.css', 'assets/styles/leaderboard.css', name='leaderboard-css')
 bp.static('/assets/scripts/level.js', 'assets/scripts/level.js', name='level-js')
+bp.static('/assets/images/check.svg', 'assets/images/check.svg', name='check-svg')
+bp.static('/assets/images/x.svg', 'assets/images/x.svg', name='x-svg')
 
 
 @bp.get('/')
@@ -21,7 +23,8 @@ async def home(request):
 		rank = 0
 		if level['level'] in solved:
 			rank = bisect.bisect(
-				[record async for record in request.app.ctx.db['leaderboard'].find({'level': level['level']}).sort('median')],
+				[record async for record in
+				 request.app.ctx.db['leaderboard'].find({'level': level['level']}).sort('median')],
 				solved[level['level']], key=lambda x: x['median'])
 		levels.append({'name': level['level'], 'desc': level['desc'], 'rank': rank})
 	return sanic.response.html(await template.render_async(
