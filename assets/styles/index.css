@@ -1,3 +1,200 @@
-#level-list {
-    list-style: none;
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.challenge-index-challenge-index {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-shrink: 0;
+    border-color: transparent;
+    flex-direction: column;
+    background-color: rgba(63, 63, 63, 1);
+}
+
+.challenge-index-profile-frame {
+    display: flex;
+    padding: 10px;
+    position: relative;
+    align-self: stretch;
+    align-items: flex-end;
+    border-color: transparent;
+    margin-bottom: 0px;
+    flex-direction: column;
+}
+
+.challenge-index-text {
+    color: rgba(238, 238, 238, 1);
+    height: auto;
+    font-size: 24px;
+    align-self: auto;
+    font-style: Display Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 0;
+    margin-bottom: 0px;
+    text-decoration: none;
+}
+
+.challenge-index-text02 {
+    color: rgba(16, 185, 129, 1);
+    height: auto;
+    font-size: 24px;
+    align-self: auto;
+    font-style: Display Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+    text-decoration: none;
+}
+
+.challenge-index-frame8 {
+    display: flex;
+    position: relative;
+    align-items: center;
+    border-color: transparent;
+    flex-direction: column;
+}
+
+.challenge-index-text04 {
+    color: rgba(239, 238, 238, 1);
+    height: auto;
+    font-size: 40px;
+    align-self: auto;
+    font-style: Display Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 0;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.challenge-index-challenge-component {
+    width: 1280px;
+    height: 58px;
+    display: flex;
+    padding: 10px;
+    position: relative;
+    align-items: center;
+    flex-shrink: 0;
+    border-color: transparent;
+    border-radius: 60px;
+    margin-bottom: 30px;
+    justify-content: center;
+    background-color: rgba(238, 238, 238, 1);
+}
+
+.challenge-index-div {
+    align-self: flex-start;
+    padding-right: 10px;
+}
+
+.challenge-index-line {
+    width: 2;
+    border: 2px dashed rgba(120, 120, 120, 0.4);
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+    margin-right: 10px;
+    background-color: var(--dl-color-gray-black);
+}
+
+.challenge-index-text06 {
+    color: rgba(0, 0, 0, 1);
+    height: auto;
+    font-size: 32px;
+    align-self: auto;
+    font-style: Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 10px;
+    margin-bottom: 0;
+    text-decoration: none;
+}
+
+.challenge-index-line1 {
+    width: 2;
+    border: 2px dashed rgba(120, 120, 120, 0.4);
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+    margin-right: 10px;
+    background-color: var(--dl-color-gray-black);
+}
+
+.challenge-index-text08 {
+    color: rgba(16, 185, 129, 1);
+    height: auto;
+    font-size: 32px;
+    align-self: auto;
+    font-style: Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 10px;
+    margin-bottom: 0;
+    text-decoration: none;
+}
+
+.challenge-index-line2 {
+    width: 2;
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    flex-shrink: 0;
+    border-color: transparent;
+    margin-right: 10px;
+    background-color: var(--dl-color-gray-black);
+}
+
+.challenge-index-line1 {
+    top: 50px;
+    left: 15.5px;
+    width: 50px;
+    height: 0px;
+    position: absolute;
+}
+
+.challenge-index-text10 {
+    color: rgba(0, 0, 0, 1);
+    height: auto;
+    font-size: 32px;
+    align-self: auto;
+    font-style: Bold;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 0;
+    margin-bottom: 0;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
