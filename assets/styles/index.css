@@ -165,3 +165,8 @@ html, body {
     white-space: nowrap;
     overflow: hidden;
 }
+
+.level-link{
+    font-weight: normal;
+    text-decoration: none;
+}

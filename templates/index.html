@@ -17,7 +17,7 @@
 		<div class="challenge-index-frame8">
 			<span class="challenge-index-text04"><span>Challenges</span></span>
 			{% for level in levels %}
-			<a href="/levels/{{level.name}}">
+			<a class="level-link" href="/levels/{{level.name}}">
 				<div class="challenge-index-challenge-component">
 					{% if level.rank == 0 %}
 						<img class="challenge-index-completion-indicator" src="/assets/images/x.svg" alt="X">
