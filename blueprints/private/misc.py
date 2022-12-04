@@ -22,7 +22,7 @@ async def home(request):
 		if level['level'] in solved:
 			rank = bisect.bisect_left(
 				[record async for record in request.app.ctx.db['leaderboard'].find({'level': level['level']}).sort('median')],
-				solved[level['level']])
+				solved[level['level']], key=lambda x: x['median'])
 		levels.append({'name': level['level'], 'desc': level['desc'], 'rank': rank})
 	return sanic.response.html(await template.render_async(
 		levels=levels, name=name))
