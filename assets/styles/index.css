@@ -83,7 +83,7 @@ html, body {
 }
 
 .challenge-index-challenge-component {
-    width: 1280px;
+    width: 95vw;
     height: 58px;
     display: flex;
     padding: 10px;
@@ -97,8 +97,7 @@ html, body {
     background-color: rgba(238, 238, 238, 1);
 }
 
-.challenge-index-div {
-    align-self: flex-start;
+.challenge-index-completion-indicator {
     padding-right: 10px;
 }
 
@@ -128,6 +127,7 @@ html, body {
     margin-right: 10px;
     margin-bottom: 0;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .challenge-index-text08 {
@@ -144,6 +144,7 @@ html, body {
     margin-right: 10px;
     margin-bottom: 0;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .challenge-index-text10 {
