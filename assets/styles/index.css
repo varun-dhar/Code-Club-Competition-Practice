@@ -17,12 +17,13 @@ html, body {
 
 .challenge-index-profile-frame {
     display: flex;
-    padding: 10px;
+    padding: 10px 0 10px 0;
     position: relative;
     align-self: stretch;
     align-items: flex-end;
     border-color: transparent;
     margin-bottom: 0;
+    margin-right: 2.5vw;
     flex-direction: column;
 }
 
