@@ -7,23 +7,23 @@
 	<link rel="stylesheet" href="/assets/styles/level.css"/>
 </head>
 <body>
-<a href="/">Home</a>
-<a href="/leaderboards/{{level}}">Leaderboard</a>
-<a href="/logout">Logout</a>
-<br/>
-<h2>Description</h2>
-<p id="description">{{desc}}</p>
-<form name="submission" enctype="multipart/form-data">
-	<label for="lang">Language</label>
-	<select name="lang" id="lang">
-		{%for lang in langs%}
-		<option>{{lang}}</option>
-		{%endfor%}
-	</select>
-	<label for="file">File:</label>
-	<input type="file" name="file" id="file"/>
+	<a href="/">Home</a>
+	<a href="/leaderboards/{{level}}">Leaderboard</a>
+	<a href="/logout">Logout</a>
 	<br/>
-	<input id="submitButton" type="submit"/>
-</form>
+	<h2>Description</h2>
+	<p id="description">{{desc}}</p>
+	<form name="submission" enctype="multipart/form-data">
+		<label for="lang">Language</label>
+		<select name="lang" id="lang">
+			{%for lang in langs%}
+			<option>{{lang}}</option>
+			{%endfor%}
+		</select>
+		<label for="file">File:</label>
+		<input type="file" name="file" id="file"/>
+		<br/>
+		<input id="submitButton" type="submit"/>
+	</form>
 </body>
 </html>

@@ -4,29 +4,34 @@
 	<meta charset="UTF-8">
 	<title>Leaderboard</title>
 	<link rel="stylesheet" href="/assets/styles/leaderboard.css"/>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-<a href="/">Home</a>
-<a href="/levels/{{ level }}">Level</a>
-<a href="/logout">Logout</a>
-<br/>
-<h2>Level {{ level }} Leaderboard</h2>
-<br/>
-<table id="table">
-	<tr>
-		<th>Rank</th>
-		<th>Name</th>
-		<th>Median Execution Time</th>
-		<th>Mean Execution Time</th>
-	</tr>
-	{% for entry in entries %}
+	<a href="/" class="navLinks navContain1">Home</a>
+	<a href="/levels/{{ level }}" class="navLinks">Level</a>
+	<div class="logout">
+		<span><span class="logout-span">Welcome, {{name}}!</span></span>
+		<br>
+		<a href="/logout"><span>Logout</span></a>
+	</div>
+	<br/>
+	<h2>Level {{ level }} Leaderboard</h2>
+	<br/>
+	<table id="table">
 		<tr>
-			<td>{{loop.index}}</td>
-			<td>{{entry.name}}</td>
-			<td>{{entry.median}}</td>
-			<td>{{entry.mean}}</td>
+			<th>Rank</th>
+			<th>Name</th>
+			<th>Median Execution Time</th>
+			<th>Mean Execution Time</th>
 		</tr>
-	{% endfor %}
-</table>
+		{% for entry in entries %}
+			<tr>
+				<td>{{loop.index}}</td>
+				<td>{{entry.name}}</td>
+				<td>{{entry.median}}</td>
+				<td>{{entry.mean}}</td>
+			</tr>
+		{% endfor %}
+	</table>
 </body>
 </html>
