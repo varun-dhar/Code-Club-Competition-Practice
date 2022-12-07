@@ -1,7 +1,16 @@
 html, body {
     margin: 0;
     padding: 0;
+
+    --Standard-Element-Width: 284px;
+    --Standard-Element-Height: 28px;
+    --Input-Offset: 24px;
+
+    --Gray1: rgba(95, 95, 95, 1);
+    --White1: rgba(217, 217, 217, 1);
+    --Aqua1: rgba(16, 185, 129, 1);
 }
+
 .register-register {
     width: 100%;
     height: 100vh;
@@ -34,10 +43,9 @@ html, body {
     height: auto;
     font-size: 40px;
     align-self: stretch;
-    font-style: Display Bold;
     text-align: center;
     font-family: Noto Sans;
-    font-weight: 700;
+    font-weight: 1000;
     line-height: normal;
     font-stretch: normal;
     margin-right: 0;
@@ -55,9 +63,9 @@ html, body {
 }
 
 .register-textinput {
-    color: rgba(95, 95, 95, 1);
-    width: 284px;
-    height: 28px;
+    color: var(--Gray1);
+    width: var(--Standard-Element-Width);
+    height: var(--Standard-Element-Height);
     font-size: 12px;
     align-self: center;
     text-align: left;
@@ -70,13 +78,13 @@ html, body {
     margin-bottom: 10px;
     padding-right: 15px;
     padding-bottom: 15px;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: var(--White1);
 }
 
 .register-textinput1 {
-    color: rgba(95, 95, 95, 1);
-    width: 284px;
-    height: 28px;
+    color: var(--Gray1);
+    width: var(--Standard-Element-Width);
+    height: var(--Standard-Element-Height);
     font-size: 12px;
     align-self: center;
     text-align: left;
@@ -89,13 +97,13 @@ html, body {
     margin-bottom: 10px;
     padding-right: 15px;
     padding-bottom: 15px;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: var(--White1);
 }
 
 .register-textinput2 {
-    color: rgba(95, 95, 95, 1);
-    width: 284px;
-    height: 28px;
+    color: var(--Gray1);
+    width: var(--Standard-Element-Width);
+    height: var(--Standard-Element-Height);
     font-size: 12px;
     align-self: center;
     text-align: left;
@@ -108,13 +116,13 @@ html, body {
     margin-bottom: 10px;
     padding-right: 15px;
     padding-bottom: 15px;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: var(--White1);
 }
 
 .register-textinput3 {
-    color: rgba(95, 95, 95, 1);
-    width: 284px;
-    height: 28px;
+    color: var(--Gray1);
+    width: var(--Standard-Element-Width);
+    height: var(--Standard-Element-Height);
     font-size: 12px;
     align-self: center;
     text-align: left;
@@ -127,12 +135,12 @@ html, body {
     margin-bottom: 10px;
     padding-right: 15px;
     padding-bottom: 15px;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: var(--White1);
 }
 
 .register-login-button {
-    width: 284px;
-    height: 28px;
+    width: calc(var(--Standard-Element-Width) + var(--Input-Offset));
+    height: var(--Standard-Element-Height);
     display: flex;
     overflow: hidden;
     position: relative;
@@ -141,7 +149,7 @@ html, body {
     flex-shrink: 0;
     border-color: transparent;
     border-radius: 10px;
-    background-color: rgba(16, 185, 129, 1);
+    background-color: var(--Aqua1);
 }
 
 .register-text2 {
@@ -150,24 +158,22 @@ html, body {
     height: auto;
     font-size: 12px;
     align-self: center;
-    font-style: SemiBold;
     text-align: center;
     font-family: Noto Sans;
-    font-weight: 600;
+    font-weight: 700;
     line-height: normal;
     font-stretch: normal;
     text-decoration: none;
 }
 
 .register-text4 {
-    color: rgba(16, 185, 129, 1);
+    color: var(--Aqua1);
     height: auto;
     font-size: 12px;
     align-self: center;
-    font-style: SemiBold;
     text-align: center;
     font-family: Noto Sans;
-    font-weight: 600;
+    font-weight: 700;
     line-height: normal;
     font-stretch: normal;
     margin-right: 0;
