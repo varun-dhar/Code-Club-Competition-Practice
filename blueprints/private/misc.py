@@ -52,5 +52,9 @@ async def leaderboard_pg(request, level: int):
 		user_data = await request.app.ctx.db['user_data'].find_one({'email': record['email']})
 		entries.append({'name': user_data['name'], 'mean': record['mean'], 'median': record['median']})
 
+	email = request.ctx.session_record['email']
+	user_data = await request.app.ctx.db['user_data'].find_one({'email': email})
+	name = user_data['name']
+
 	template = request.app.ctx.environment.get_template('leaderboard.html')
-	return sanic.response.html(await template.render_async(level=level, entries=entries))
+	return sanic.response.html(await template.render_async(level=level, entries=entries, name=name))
