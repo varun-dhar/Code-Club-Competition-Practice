@@ -1,3 +1,5 @@
+import datetime
+
 import sanic
 import secrets
 import asyncio
@@ -39,7 +41,7 @@ async def register(request):
 	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (
 			await request.app.ctx.db['unverified'].update_one({'email': email},
 															  {'$setOnInsert': {'email': email,
-																				'verification': verification}},
+																				'verification': verification, 'created_at': datetime.datetime.utcnow()}},
 															  upsert=True)).matched_count >= 1:
 		return sanic.response.text('account exists', status=400)
 

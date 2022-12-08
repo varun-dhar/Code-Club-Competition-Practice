@@ -46,6 +46,7 @@ async def before_start(srv: sanic.Sanic, loop):
 	await srv.ctx.db['sessions'].create_index('last_login', expireAfterSeconds=60 * 60)
 	await srv.ctx.db['user_data'].create_index('email', unique=True)
 	await srv.ctx.db['hashes'].create_index('email', unique=True)
+	await srv.ctx.db['sessions'].create_index('created_at', expireAfterSeconds=60 * 60)
 	srv.ctx.session = aiohttp.ClientSession(loop=loop)
 	srv.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
 											 autoescape=True)
