@@ -38,9 +38,12 @@ async def level_pg(request, level: int):
 	record = await request.app.ctx.db['levels'].find_one({'level': level})
 	if not record:
 		return sanic.response.empty(status=404)
+	email = request.ctx.session_record['email']
+	user_data = await request.app.ctx.db['user_data'].find_one({'email': email})
+	name = user_data['name']
 	template = request.app.ctx.environment.get_template('level.html')
 	return sanic.response.html(
-		await template.render_async(langs=request.app.ctx.langs.keys(), level=level, desc=record['desc']))
+		await template.render_async(langs=request.app.ctx.langs.keys(), level=level, desc=record['desc'], name=name))
 
 
 @bp.get('/leaderboards/<level:int>')
