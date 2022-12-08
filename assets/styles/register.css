@@ -140,7 +140,7 @@ html, body {
 
 .register-login-button {
     width: calc(var(--Standard-Element-Width) + var(--Input-Offset));
-    height: var(--Standard-Element-Height);
+    height: auto;
     display: flex;
     overflow: hidden;
     position: relative;

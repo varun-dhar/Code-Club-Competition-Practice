@@ -1,3 +1,157 @@
 #description {
     white-space: pre-wrap;
 }
+
+body, html {
+    --Gray1: rgba(95, 95, 95, 1);
+    --Gray2: rgba(63, 63, 63, 1);
+    --White1: rgba(217, 217, 217, 1);
+    --White2: rgba(239, 238, 238, 1);
+    --Aqua1: rgba(16, 185, 129, 1);
+
+    --Text-Header: rgb(8, 133, 102);
+
+    background-color: var(--Gray2);
+}
+
+.logout {
+    float: right;
+    color: var(--Aqua1);
+    height: auto;
+    font-size: 24px;
+    align-self: auto;
+    text-align: right;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin-right: 20px;
+    margin-bottom: 0;
+    text-decoration: none;
+}
+
+.logout a {
+    color: var(--Aqua1);
+    text-decoration: none;
+}
+
+.logout-span {
+    color: var(--White2)
+}
+
+.navLinks {
+    display: inline-block;
+    text-align: center;
+    color: var(--Aqua1);
+    height: auto;
+    font-size: 24px;
+    align-self: auto;
+    font-family: Noto Sans;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    margin: 5px 5px 0;
+    text-decoration: none;
+    background-color: var(--White2);
+    border-radius: 30px;
+    padding: 5px 40px;
+}
+
+.navContain1 {
+    margin-left: calc(50% - 190.98px);
+}
+
+h2 {
+    text-align: center;
+    font-size: 3rem;
+    font-family: Noto Sans;
+    font-weight: 1000;
+    color: var(--White2)
+}
+
+.desc {
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+    width: auto;
+    height: auto;
+    padding: 10px;
+
+    font-family: Noto Sans;
+    background-color: var(--Gray1);
+    border-radius: 40px;
+
+    color: var(--White2);
+}
+
+form {
+    margin-top: 10px;
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+    width: auto;
+    height: auto;
+    padding: 10px;
+
+    text-align: center;
+
+    font-family: Noto Sans;
+    background-color: var(--Gray1);
+    border-radius: 40px;
+
+    color: var(--White2);
+}
+
+form select {
+    border-radius: 20px;
+    background-color: var(--Gray2);
+    color: var(--White2);
+
+    font-family: Noto Sans;
+    font-size: 1.2rem;
+    min-width: 100px;
+
+    text-align: center;
+    margin-right: 30px;
+}
+
+.form-file {
+    border-radius: 20px;
+    background-color: var(--Gray2);
+    color: var(--White2);
+
+    font-family: Noto Sans;
+    font-size: 1.2rem;
+
+    width: auto;
+    text-align: center;
+}
+
+form input::file-selector-button {
+    border-radius: 20px;
+    background-color: var(--White1);
+    color: rgb(0, 0, 0);
+    border-color: transparent;
+
+    font-family: Noto Sans;
+    font-size: 1.2rem;
+    width: auto;
+
+    text-align: center;
+}
+
+form label {
+    font-family: Noto Sans;
+    font-size: 1.2rem;
+}
+
+.form-submit {
+    border-radius: 40px;
+    background-color: var(--Aqua1);
+    color: var(--White2);
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 10px;
+    margin-top: 25px;
+
+    border-color: transparent;
+
+}

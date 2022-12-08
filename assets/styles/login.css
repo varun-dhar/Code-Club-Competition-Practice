@@ -73,7 +73,7 @@ html, body {
 
 .login-login-button {
     width: var(--Standard-Element-Width);
-    height: var(--Standard-Element-Height);
+    height: auto;
     display: flex;
     overflow: hidden;
     position: relative;

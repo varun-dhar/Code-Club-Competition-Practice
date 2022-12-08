@@ -5,14 +5,22 @@
 	<title>Level {{level}}</title>
 	<script src="/assets/scripts/level.js"></script>
 	<link rel="stylesheet" href="/assets/styles/level.css"/>
+	<link rel="stylesheet" href="../assets/styles/level.css"/> <!-- Remove this line -->
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-	<a href="/">Home</a>
-	<a href="/leaderboards/{{level}}">Leaderboard</a>
-	<a href="/logout">Logout</a>
+	<a href="/" class="navLinks navContain1">Home</a>
+	<a href="/leaderboards/{{ level }}" class="navLinks">Leaderboard</a>
+	<div class="logout">
+		<span><span class="logout-span">Welcome, {{name}}!</span></span>
+		<br>
+		<a href="/logout"><span>Logout</span></a>
+	</div>
 	<br/>
 	<h2>Description</h2>
-	<p id="description">{{desc}}</p>
+	<div class="desc">
+		<p id="description">{{desc}}</p>
+	</div>
 	<form name="submission" enctype="multipart/form-data">
 		<label for="lang">Language</label>
 		<select name="lang" id="lang">
@@ -21,9 +29,9 @@
 			{%endfor%}
 		</select>
 		<label for="file">File:</label>
-		<input type="file" name="file" id="file"/>
+		<input type="file" name="file" id="file" class="form-file"/>
 		<br/>
-		<input id="submitButton" type="submit"/>
+		<input id="submitButton" type="submit" class="form-submit"/>
 	</form>
 </body>
 </html>
