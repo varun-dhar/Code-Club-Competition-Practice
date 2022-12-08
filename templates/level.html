@@ -5,7 +5,9 @@
 	<title>Level {{level}}</title>
 	<script src="/assets/scripts/level.js"></script>
 	<link rel="stylesheet" href="/assets/styles/level.css"/>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 	<a href="/" class="navLinks navContain1">Home</a>
@@ -27,9 +29,8 @@
 			<option>{{lang}}</option>
 			{%endfor%}
 		</select>
-		<label for="file">File:</label>
+		<label class="file-label" for="file">Upload File</label>
 		<input type="file" name="file" id="file" class="form-file"/>
-		<br/>
 		<input id="submitButton" type="submit" class="form-submit"/>
 	</form>
 </body>
