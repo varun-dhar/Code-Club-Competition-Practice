@@ -10,28 +10,28 @@
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-	<a href="/" class="navLinks navContain1">Home</a>
-	<a href="/leaderboards/{{ level }}" class="navLinks">Leaderboard</a>
-	<div class="logout">
-		<span><span class="logout-span">Welcome, {{name}}!</span></span>
-		<br>
-		<a href="/logout"><span>Logout</span></a>
-	</div>
-	<br/>
-	<h2>Description</h2>
-	<div class="desc">
-		<p id="description">{{desc}}</p>
-	</div>
-	<form name="submission" enctype="multipart/form-data">
-		<label for="lang">Language</label>
-		<select name="lang" id="lang">
-			{%for lang in langs%}
-			<option>{{lang}}</option>
-			{%endfor%}
-		</select>
-		<label class="file-label" for="file">Upload File</label>
-		<input type="file" name="file" id="file" class="form-file"/>
-		<input id="submitButton" type="submit" class="form-submit"/>
-	</form>
+<a href="/" class="navLinks navContain1">Home</a>
+<a href="/leaderboards/{{ level }}" class="navLinks">Leaderboard</a>
+<div class="logout">
+	<span><span class="logout-span">Welcome, {{name}}!</span></span>
+	<br>
+	<a href="/logout"><span>Logout</span></a>
+</div>
+<br/>
+<h2>Description</h2>
+<div class="desc">
+	<p id="description">{{desc}}</p>
+</div>
+<form name="submission" enctype="multipart/form-data">
+	<label for="lang">Language</label>
+	<select name="lang" id="lang">
+		{%for lang in langs%}
+		<option>{{lang}}</option>
+		{%endfor%}
+	</select>
+	<label class="file-label" for="file">Upload File</label>
+	<input type="file" name="file" id="file" class="form-file"/>
+	<input id="submitButton" type="submit" class="form-submit"/>
+</form>
 </body>
 </html>

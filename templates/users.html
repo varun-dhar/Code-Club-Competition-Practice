@@ -14,12 +14,14 @@
 		<th>Delete?</th>
 	</tr>
 	{% for user in users %}
-		<tr>
-			<td>{{user.name}}</td>
-			<td>{{user.email}}</td>
-			<td>{{user.verified}}</td>
-			<td><button onclick="deleteUser('{{user.email}}')">Delete</button></td>
-		</tr>
+	<tr>
+		<td>{{user.name}}</td>
+		<td>{{user.email}}</td>
+		<td>{{user.verified}}</td>
+		<td>
+			<button onclick="deleteUser('{{user.email}}')">Delete</button>
+		</td>
+	</tr>
 	{%endfor%}
 </table>
 </body>

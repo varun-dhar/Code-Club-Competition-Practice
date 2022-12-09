@@ -1,173 +1,173 @@
 html, body {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .challenge-index-challenge-index {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    position: relative;
-    align-items: center;
-    flex-shrink: 0;
-    border-color: transparent;
-    flex-direction: column;
-    background-color: rgba(63, 63, 63, 1);
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	position: relative;
+	align-items: center;
+	flex-shrink: 0;
+	border-color: transparent;
+	flex-direction: column;
+	background-color: rgba(63, 63, 63, 1);
 }
 
 .challenge-index-profile-frame {
-    display: flex;
-    padding: 10px 0 10px 0;
-    position: relative;
-    align-self: stretch;
-    align-items: flex-end;
-    border-color: transparent;
-    margin-bottom: 0;
-    margin-right: 2.5vw;
-    flex-direction: column;
+	display: flex;
+	padding: 10px 0 10px 0;
+	position: relative;
+	align-self: stretch;
+	align-items: flex-end;
+	border-color: transparent;
+	margin-bottom: 0;
+	margin-right: 2.5vw;
+	flex-direction: column;
 }
 
 .challenge-index-text {
-    color: rgba(238, 238, 238, 1);
-    height: auto;
-    font-size: 24px;
-    align-self: auto;
-    font-style: Display Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 700;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 0;
-    margin-bottom: 0px;
-    text-decoration: none;
+	color: rgba(238, 238, 238, 1);
+	height: auto;
+	font-size: 24px;
+	align-self: auto;
+	font-style: Display Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 700;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 0;
+	margin-bottom: 0px;
+	text-decoration: none;
 }
 
 .challenge-index-text02 {
-    color: rgba(16, 185, 129, 1);
-    height: auto;
-    font-size: 24px;
-    align-self: auto;
-    font-style: Display Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 700;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 0;
-    margin-bottom: 0;
-    text-decoration: none;
+	color: rgba(16, 185, 129, 1);
+	height: auto;
+	font-size: 24px;
+	align-self: auto;
+	font-style: Display Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 700;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 0;
+	margin-bottom: 0;
+	text-decoration: none;
 }
 
 .challenge-index-frame8 {
-    display: flex;
-    position: relative;
-    align-items: center;
-    border-color: transparent;
-    flex-direction: column;
+	display: flex;
+	position: relative;
+	align-items: center;
+	border-color: transparent;
+	flex-direction: column;
 }
 
 .challenge-index-text04 {
-    color: rgba(239, 238, 238, 1);
-    height: auto;
-    font-size: 40px;
-    align-self: auto;
-    font-style: Display Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 700;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 0;
-    margin-bottom: 30px;
-    text-decoration: none;
+	color: rgba(239, 238, 238, 1);
+	height: auto;
+	font-size: 40px;
+	align-self: auto;
+	font-style: Display Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 700;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 0;
+	margin-bottom: 30px;
+	text-decoration: none;
 }
 
 .challenge-index-challenge-component {
-    width: 95vw;
-    height: 58px;
-    display: flex;
-    padding: 10px;
-    position: relative;
-    align-items: center;
-    flex-shrink: 0;
-    border-color: transparent;
-    border-radius: 60px;
-    margin-bottom: 30px;
-    justify-content: center;
-    background-color: rgba(238, 238, 238, 1);
+	width: 95vw;
+	height: 58px;
+	display: flex;
+	padding: 10px;
+	position: relative;
+	align-items: center;
+	flex-shrink: 0;
+	border-color: transparent;
+	border-radius: 60px;
+	margin-bottom: 30px;
+	justify-content: center;
+	background-color: rgba(238, 238, 238, 1);
 }
 
 .challenge-index-completion-indicator {
-    padding-right: 10px;
+	padding-right: 10px;
 }
 
 .challenge-index-line {
-    width: 2px;
-    height: 50px;
-    display: flex;
-    position: relative;
-    align-items: flex-start;
-    flex-shrink: 0;
-    border-color: transparent;
-    margin-right: 10px;
-    background-color: black;
+	width: 2px;
+	height: 50px;
+	display: flex;
+	position: relative;
+	align-items: flex-start;
+	flex-shrink: 0;
+	border-color: transparent;
+	margin-right: 10px;
+	background-color: black;
 }
 
 .challenge-index-text06 {
-    color: rgba(0, 0, 0, 1);
-    height: auto;
-    font-size: 32px;
-    align-self: auto;
-    font-style: Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 600;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 10px;
-    margin-bottom: 0;
-    text-decoration: none;
-    white-space: nowrap;
+	color: rgba(0, 0, 0, 1);
+	height: auto;
+	font-size: 32px;
+	align-self: auto;
+	font-style: Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 600;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 10px;
+	margin-bottom: 0;
+	text-decoration: none;
+	white-space: nowrap;
 }
 
 .challenge-index-text08 {
-    color: rgba(16, 185, 129, 1);
-    height: auto;
-    font-size: 32px;
-    align-self: auto;
-    font-style: Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 600;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 10px;
-    margin-bottom: 0;
-    text-decoration: none;
-    white-space: nowrap;
+	color: rgba(16, 185, 129, 1);
+	height: auto;
+	font-size: 32px;
+	align-self: auto;
+	font-style: Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 600;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 10px;
+	margin-bottom: 0;
+	text-decoration: none;
+	white-space: nowrap;
 }
 
 .challenge-index-text10 {
-    color: rgba(0, 0, 0, 1);
-    height: auto;
-    font-size: 32px;
-    align-self: auto;
-    font-style: Bold;
-    text-align: right;
-    font-family: Noto Sans;
-    font-weight: 600;
-    line-height: normal;
-    font-stretch: normal;
-    margin-right: 0;
-    margin-bottom: 0;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+	color: rgba(0, 0, 0, 1);
+	height: auto;
+	font-size: 32px;
+	align-self: auto;
+	font-style: Bold;
+	text-align: right;
+	font-family: Noto Sans;
+	font-weight: 600;
+	line-height: normal;
+	font-stretch: normal;
+	margin-right: 0;
+	margin-bottom: 0;
+	text-decoration: none;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .level-link{
-    font-weight: normal;
-    text-decoration: none;
+	font-weight: normal;
+	text-decoration: none;
 }
