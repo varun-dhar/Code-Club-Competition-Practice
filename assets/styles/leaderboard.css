@@ -48,7 +48,7 @@ body, html {
     font-size: 24px;
     align-self: auto;
     font-family: Noto Sans;
-    font-weight: 700;
+    font-weight: 600;
     line-height: normal;
     font-stretch: normal;
     margin: 5px 5px 0;
@@ -64,7 +64,7 @@ body, html {
 
 h2 {
     text-align: center;
-    font-weight: 1000;
+    font-weight: 700;
     font-size: 3rem;
     font-family: Noto Sans;
     color: var(--White2);
@@ -83,13 +83,13 @@ table {
 table th {
     color: var(--Text-Header);
     font-size: 2rem;
-    font-weight: 1000;
+    font-weight: 700;
     padding: 10px;
 }
 
 table td {
     color: var(--Gray1);
     font-size: 1.2rem;
-    font-weight: 1000;
+    font-weight: 600;
     padding: 10px;
 }
