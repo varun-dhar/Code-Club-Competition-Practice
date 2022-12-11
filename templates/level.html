@@ -24,13 +24,13 @@
 </div>
 <form name="submission" enctype="multipart/form-data">
 	<label for="lang">Language</label>
-	<select name="lang" id="lang">
+	<select name="lang" id="lang" required>
 		{%for lang in langs%}
 		<option>{{lang}}</option>
 		{%endfor%}
 	</select>
 	<label class="file-label" for="file">Upload File</label>
-	<input type="file" name="file" id="file" class="form-file"/>
+	<input type="file" name="file" id="file" class="form-file" required/>
 	<input id="submitButton" type="submit" class="form-submit"/>
 </form>
 </body>

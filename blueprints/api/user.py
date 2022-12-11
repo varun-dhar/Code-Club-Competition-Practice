@@ -9,7 +9,7 @@ bp = sanic.Blueprint('user-api')
 async def run_test(request, level: int):
 	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files:
 		return sanic.response.text('Missing fields', status=400)
-	if (await request.app.ctx.db['levels'].find_one({'level': level})) is None:
+	if (level_info := await request.app.ctx.db['levels'].find_one({'level': level})) is None:
 		return sanic.response.text('No such level', status=400)
 
 	lang = request.form['lang'][0]
@@ -23,7 +23,6 @@ async def run_test(request, level: int):
 	except UnicodeDecodeError:
 		return sanic.response.text('Invalid file', status=400)
 
-	level_info = await request.app.ctx.db['levels'].find_one({'level': level})
 	exec_times = []
 	for i in range(1, level_info['n_tests'] + 1):
 		async with aiofiles.open(f'levels/{level}/{i}.in', 'r') as f:
