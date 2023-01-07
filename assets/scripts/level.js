@@ -5,7 +5,7 @@ window.addEventListener('load', () => {
 		const submitButton = document.getElementById('submitButton');
 		submitButton.disabled = true;
 		const spinner = document.getElementById("spinner");
-		spinner.hidden = false;
+		spinner.style.display = 'inline-block';
 		const data = new FormData(form);
 		fetch(window.location.href, {method: 'POST', body: data}).then(async (resp) => {
 			if (resp.ok) {
@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
 			}
 			document.getElementById('file').value = null;
 			submitButton.disabled = false;
-			spinner.hidden = true;
+			spinner.style.display = 'none';
 		});
 	});
 });
