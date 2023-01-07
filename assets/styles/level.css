@@ -143,8 +143,35 @@ form label {
 	font-size: 1.5rem;
 	padding: 5px;
 	margin-top: 10px;
+	margin-right: 10px;
 	font-family: Noto Sans;
 	font-weight: 600;
 
 	border-color: transparent;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 2vh;
+  height: 2vh;
+  padding-bottom: inherit;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 2vh;
+  height: 2vh;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

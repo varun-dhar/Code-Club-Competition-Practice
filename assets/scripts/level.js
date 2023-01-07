@@ -4,6 +4,8 @@ window.addEventListener('load', () => {
 		event.preventDefault();
 		const submitButton = document.getElementById('submitButton');
 		submitButton.disabled = true;
+		const spinner = document.getElementById("spinner");
+		spinner.hidden = false;
 		const data = new FormData(form);
 		fetch(window.location.href, {method: 'POST', body: data}).then(async (resp) => {
 			if (resp.ok) {
@@ -13,6 +15,7 @@ window.addEventListener('load', () => {
 			}
 			document.getElementById('file').value = null;
 			submitButton.disabled = false;
+			spinner.hidden = true;
 		});
 	});
 });
