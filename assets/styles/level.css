@@ -151,7 +151,7 @@ form label {
 }
 
 .lds-dual-ring {
-  display: inline-block;
+  display: none;
   width: 2vh;
   height: 2vh;
   padding-bottom: inherit;
