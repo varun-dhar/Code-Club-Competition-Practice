@@ -1,6 +1,7 @@
 html, body {
 	margin: 0;
 	padding: 0;
+	background-color: rgba(63, 63, 63, 1);
 }
 
 .challenge-index-challenge-index {
@@ -12,7 +13,6 @@ html, body {
 	flex-shrink: 0;
 	border-color: transparent;
 	flex-direction: column;
-	background-color: rgba(63, 63, 63, 1);
 }
 
 .challenge-index-profile-frame {
