@@ -50,4 +50,5 @@ async def delete_user(request: sanic.Request):
 	await db['leaderboard'].delete_many({'email': email})
 	await db['sessions'].delete_many({'email': email})
 	await db['user_data'].delete_one({'email': email})
+	await db['unverified'].delete_one({'email':email})
 	return sanic.response.empty()
