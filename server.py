@@ -10,11 +10,6 @@ import sanic
 
 import blueprints
 
-'''
-TODO
-- steal challenges from leetcode and usaco
-- make this look better
-'''
 
 dotenv.load_dotenv()
 
@@ -51,5 +46,5 @@ async def before_start(srv: sanic.Sanic, loop):
 	srv.ctx.environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), enable_async=True,
 											 autoescape=True)
 
-
-app.run()
+if __name__ == '__main__':
+	app.run()

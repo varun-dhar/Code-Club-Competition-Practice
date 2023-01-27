@@ -11,7 +11,7 @@ bp.static('/assets/images/x.svg', 'assets/images/x.svg', name='x-svg')
 
 
 @bp.get('/')
-async def home(request):
+async def home(request: sanic.Request):
 	template = request.app.ctx.environment.get_template('index.html')
 	email = request.ctx.session_record['email']
 	user_data = await request.app.ctx.db['user_data'].find_one({'email': email})
@@ -34,7 +34,7 @@ async def home(request):
 
 
 @bp.get('/levels/<level:int>')
-async def level_pg(request, level: int):
+async def level_pg(request: sanic.Request, level: int):
 	record = await request.app.ctx.db['levels'].find_one({'level': level})
 	if not record:
 		return sanic.response.empty(status=404)
@@ -47,7 +47,7 @@ async def level_pg(request, level: int):
 
 
 @bp.get('/leaderboards/<level:int>')
-async def leaderboard_pg(request, level: int):
+async def leaderboard_pg(request: sanic.Request, level: int):
 	if not (await request.app.ctx.db['levels'].find_one({'level': level})):
 		return sanic.response.empty(status=404)
 	entries = []

@@ -19,7 +19,7 @@ bp.static('/assets/scripts/verify-fail.js', 'assets/scripts/verify-fail.js', nam
 
 
 @bp.post('/register')
-async def register(request):
+async def register(request: sanic.Request):
 	if not request.form or any(
 			field not in request.form for field in ('name', 'email', 'password', 'confirm_password')):
 		return sanic.response.text('Missing fields', status=400)
@@ -43,7 +43,7 @@ async def register(request):
 															  {'$setOnInsert': {'email': email,
 																				'verification': verification, 'created_at': datetime.datetime.utcnow()}},
 															  upsert=True)).matched_count >= 1:
-		return sanic.response.text('account exists', status=400)
+		return sanic.response.text('Account exists', status=400)
 
 	loop = asyncio.get_event_loop()
 	with concurrent.futures.ThreadPoolExecutor() as pool:
@@ -85,7 +85,7 @@ async def register(request):
 
 
 @bp.get('/verify/<verification:str>')
-async def verify(request, verification: str):
+async def verify(request: sanic.Request, verification: str):
 	record = await request.app.ctx.db['unverified'].find_one_and_delete({'verification': verification})
 	template = request.app.ctx.environment.get_template('verify.html')
 	if not record:
@@ -95,26 +95,26 @@ async def verify(request, verification: str):
 
 
 @bp.post('/login')
-async def login(request):
+async def login(request: sanic.Request):
 	if not request.form or any(i not in request.form for i in ('email', 'password')):
-		return sanic.response.text('missing fields', status=400)
+		return sanic.response.text('Missing fields', status=400)
 
 	email = request.form['email'][0]
 
 	record = await request.app.ctx.db['hashes'].find_one({'email': email})
 	if not record:
-		return sanic.response.text('invalid email/password', status=400)
+		return sanic.response.text('Invalid email/password', status=400)
 
 	user_data = await request.app.ctx.db['user_data'].find_one({'email': email})
 	if not user_data or not user_data['verified']:
-		return sanic.response.text('unverified account', status=400)
+		return sanic.response.text('Unverified account', status=400)
 
 	loop = asyncio.get_event_loop()
 	with concurrent.futures.ThreadPoolExecutor() as pool:
 		hasher = argon2.PasswordHasher()
 		try:
 			await loop.run_in_executor(pool, hasher.verify, record['hash'], request.form['password'][0])
-		except argon2.exceptions.VerifyMismatchError:
+		except (argon2.exceptions.VerifyMismatchError, argon2.exceptions.VerificationError, argon2.exceptions.InvalidHash):
 			return sanic.response.text('invalid email/password', status=400)
 		finally:
 			del request.form['password'][0]

@@ -6,14 +6,14 @@ bp = sanic.Blueprint('admin-api')
 
 
 @bp.on_request
-async def check_admin(request):
+async def check_admin(request: sanic.Request):
 	record = await request.app.ctx.db['user_data'].find_one({'email': request.ctx.session_record['email']})
 	if not record['admin']:
 		return sanic.response.empty(status=403)
 
 
 @bp.post('/add_level')
-async def add_level(request):
+async def add_level(request: sanic.Request):
 	try:
 		level = int(request.form['level'][0])
 	except ValueError:

@@ -6,7 +6,7 @@ bp = sanic.Blueprint('user-api')
 
 
 @bp.post('/levels/<level:int>')
-async def run_test(request, level: int):
+async def run_test(request: sanic.Request, level: int):
 	if not request.form or 'lang' not in request.form or not request.files or 'file' not in request.files:
 		return sanic.response.text('Missing fields', status=400)
 	if (level_info := await request.app.ctx.db['levels'].find_one({'level': level})) is None:

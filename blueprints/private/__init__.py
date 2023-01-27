@@ -11,7 +11,7 @@ group = sanic.Blueprint.group(admin.bp, account.bp, misc.bp)
 
 
 @group.middleware('request', priority=1)
-async def check_login(request):
+async def check_login(request: sanic.Request):
 	if 'session_token' not in request.cookies:
 		return sanic.response.redirect('/login')
 	record = await request.app.ctx.db['sessions'].find_one({'token': request.cookies['session_token']})
