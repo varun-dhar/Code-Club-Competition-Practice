@@ -7,3 +7,4 @@ aiohttp
 aiofiles
 dnspython
 jinja2
+regex

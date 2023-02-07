@@ -38,7 +38,7 @@
 							name="password"
 							required
 							title="(must be at least 8 characters long, and contain both a number and a special character)"
-							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]&#123;8,100&#125;$"
+							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\p{P}\p{S}])[A-Za-z\d\p{P}\p{S}]{8,100}$"
 							class="register-textinput2 input"
 					/>
 					<input
@@ -47,7 +47,7 @@
 							id="confirm_password"
 							name="confirm_password"
 							required
-							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]&#123;8,100&#125;$"
+							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\p{P}\p{S}])[A-Za-z\d\p{P}\p{S}]{8,100}$"
 							class="register-textinput3 input"
 					/>
 					<button type="submit" class="register-login-button" id="submitButton">
