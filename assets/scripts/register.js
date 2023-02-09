@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 		const data = new FormData(form);
 		fetch('/register', {method: "POST", body: data}).then(async (resp) => {
 			if (resp.ok) {
-				alert('Registered. Check your email to verify your account. The verification email may be in your junk folder.')
+				alert('Registered. Check your email to verify your account. The verification email may be in your junk folder. The verification will expire in 1 hour.');
 				window.location.replace('/');
 			} else {
 				alert(await resp.text());

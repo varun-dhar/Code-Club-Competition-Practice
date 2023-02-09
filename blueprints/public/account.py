@@ -41,7 +41,8 @@ async def register(request: sanic.Request):
 	if await request.app.ctx.db['user_data'].find_one({'email': email}) or (
 			await request.app.ctx.db['unverified'].update_one({'email': email},
 															  {'$setOnInsert': {'email': email,
-																				'verification': verification, 'created_at': datetime.datetime.utcnow()}},
+																				'verification': verification,
+																				'created_at': datetime.datetime.utcnow()}},
 															  upsert=True)).matched_count >= 1:
 		return sanic.response.text('Account exists', status=400)
 
@@ -77,10 +78,12 @@ async def register(request: sanic.Request):
 
 	del verification
 
-	await request.app.ctx.db['hashes'].insert_one({'email': email, 'hash': pwd_hash})
+	await request.app.ctx.db['hashes'].insert_one(
+		{'email': email, 'hash': pwd_hash, 'created_at': datetime.datetime.utcnow()})
 	del pwd_hash
 	await request.app.ctx.db['user_data'].insert_one(
-		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False})
+		{'email': email, 'name': request.form['name'][0], 'verified': False, 'admin': False,
+		 'created_at': datetime.datetime.utcnow()})
 	return sanic.response.empty()
 
 
@@ -90,7 +93,9 @@ async def verify(request: sanic.Request, verification: str):
 	template = request.app.ctx.environment.get_template('verify.html')
 	if not record:
 		return sanic.response.html((await template.render_async(success=False)), status=400)
-	await request.app.ctx.db['user_data'].update_one({'email': record['email']}, {'$set': {'verified': True}})
+	await request.app.ctx.db['user_data'].update_one({'email': record['email']},
+													 {'$set': {'verified': True}, '$unset': {'created_at': ''}})
+	await request.app.ctx.db['hashes'].update_one({'email': record['email']}, {'$unset': {'created_at': ''}})
 	return sanic.response.html(await template.render_async(success=True))
 
 
@@ -114,7 +119,9 @@ async def login(request: sanic.Request):
 		hasher = argon2.PasswordHasher()
 		try:
 			await loop.run_in_executor(pool, hasher.verify, record['hash'], request.form['password'][0])
-		except (argon2.exceptions.VerifyMismatchError, argon2.exceptions.VerificationError, argon2.exceptions.InvalidHash):
+		except (
+				argon2.exceptions.VerifyMismatchError, argon2.exceptions.VerificationError,
+				argon2.exceptions.InvalidHash):
 			return sanic.response.text('invalid email/password', status=400)
 		finally:
 			del request.form['password'][0]
