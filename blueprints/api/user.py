@@ -55,7 +55,7 @@ async def run_test(request: sanic.Request, level: int):
 	compile_args = request.app.ctx.compile_args.get(lang, '')
 
 	exec_times = []
-	results = [test_solution(request.app.ctx.session, level, i, lang_id, file, compile_args) for i in
+	results = [asyncio.create_task(test_solution(request.app.ctx.session, level, i, lang_id, file, compile_args)) for i in
 			   range(1, level_info['n_tests'] + 1)]
 	for coro in asyncio.as_completed(results):
 		success, output = await coro
@@ -63,7 +63,7 @@ async def run_test(request: sanic.Request, level: int):
 			exec_times.append(output)
 		else:
 			for closed_coro in results:
-				closed_coro.close()
+				closed_coro.cancel()
 			return sanic.response.text(output, status=400)
 
 	mean = statistics.mean(exec_times)
