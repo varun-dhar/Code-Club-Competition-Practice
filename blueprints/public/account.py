@@ -18,7 +18,7 @@ bp.static('/assets/scripts/verify-success.js', 'assets/scripts/verify-success.js
 bp.static('/assets/scripts/verify-fail.js', 'assets/scripts/verify-fail.js', name='verify-fail-js')
 
 
-@bp.post('/register')
+@bp.post('/register',name='public-register')
 async def register(request: sanic.Request):
 	if not request.form or any(
 			field not in request.form for field in ('name', 'email', 'password', 'confirm_password')):
@@ -99,7 +99,7 @@ async def verify(request: sanic.Request, verification: str):
 	return sanic.response.html(await template.render_async(success=True))
 
 
-@bp.post('/login')
+@bp.post('/login',name='public-login')
 async def login(request: sanic.Request):
 	if not request.form or any(i not in request.form for i in ('email', 'password')):
 		return sanic.response.text('Missing fields', status=400)
